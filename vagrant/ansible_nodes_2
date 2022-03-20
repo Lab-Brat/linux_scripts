@@ -1,0 +1,30 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  
+  servers=[
+    {
+      :hostname => "node1",
+      :box      => "ubuntu/focal64"
+    },
+    {
+      :hostname => "node2",
+      :box      => "almalinux/8"
+    }
+  ]
+
+  servers.each do |machine|
+    config.vm.define machine[:hostname] do |node|
+      node.vm.box = machine[:box]
+      node.vm.hostname = machine[:hostname]
+      node.vm.network "public_network", bridge: "wlp4s0"
+      
+      node.vm.provider "virtualbox" do |vb|
+        vb.gui = false
+        vb.memory = "2048"
+        vb.cpus = 2
+      end
+    end
+  end
+end
