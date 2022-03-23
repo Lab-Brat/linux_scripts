@@ -1,12 +1,12 @@
 #/bin/bash
 #set -x
 
-curl -k https://glpi.bmstu.ru > /dev/null 2>1 ; CURLR=$?
+curl -k https://github.com/Lab-Brat > /dev/null 2>&1 ; CURLR=$?
 if [ $CURLR -eq 0 ]
 then
-	GLPI="\033[32mAvailable\033[0m"
+	GIT="\033[32mAvailable\033[0m"
 else
-	GLPI="\033[31mNOT Available\033[0m"
+	GIT="\033[31mNOT Available\033[0m"
 fi
 
 IPADDR4=`ip a | grep -v 'inet 127.\|inet 169.254.\|inet6 ::1/128' | grep -w inet | tr -s " " | cut -f 3 -d " "`
@@ -81,7 +81,7 @@ COMPDISK=`lsblk -o NAME,MODEL,TYPE,SIZE,TRAN,HOTPLUG,SERIAL | grep 'MODEL\| disk
 #59  echo $COMPDISK
 #echo -e " \n\n\n\n"
 echo -e "==============================================================================="
-echo -e " https://glpi.bmstu.ru:\t$GLPI"
+echo -e " github.com/Lab-Brat:\t$GIT"
 echo -e " IPv4 address:\t\t$IPADDR4"
 echo -e " IPv6 address:\t\t$IPADDR6"
 echo -e " MAC address:\t\t$MAC"
