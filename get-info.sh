@@ -31,39 +31,9 @@ fi
 ###########
 
 #-------------------------
-subgethostname() {
-mount /dev/$1 /mnt 2>/dev/null 2>1
-if [ -e /mnt/etc/os-release ]
-then
-	REZ=`grep 'PRETTY_NAME="ALT Education 9.2 (FalcoRusticolus)"' /mnt/etc/os-release`
-	if [ ! -z "REZ" ]
-	then
-		FREESPACE=`df -h /mnt`
-		if [ -e /mnt/etc/hostname ]
-		then
-			COMPHOSTNAME=`cat /mnt/etc/hostname`
-		else
-			COMPHOSTNAME=`Undefined`
-		fi
-	fi
-fi
-umount /mnt
-}
-#--------------------------
+COMPHOSTNAME=`cat /etc/hostname`
+FREESPACE=`df -h /`
 
-
-STDISKS=`lsblk -o NAME,HOTPLUG,MODEL,SERIAL,TYPE,SIZE,VENDOR,TRAN | grep 'MODEL\| disk ' | grep -v -w usb | cut -f 1 -d " "`
-for each in `echo $STDISKS`
-do
-	if [ -e /dev/${each}3 ]
-	then
-		subgethostname ${each}3
-	fi
-	if [ -e /dev/${each}1 ]
-	then
-		subgethostname ${each}1
-	fi
-done
 ##########
 
 CPUMODEL=`cat /proc/cpuinfo | grep -m 1 'model name' | sed -e 's/model name[[:space:]]*: //'`
@@ -91,7 +61,7 @@ echo -e " CPU Core count:\t$CPUCORECOUNT"
 echo -e " RAM size:\t\t$RAM"
 echo -e " Videcard:\t\t$COMPVIDEO"
 echo -e " \n----------------- Disks ----------------\n$COMPDISK"
-echo -e " \n------ Free space on AltLinux disk -----\n$FREESPACE"
+echo -e " \n------ Free space on disk -----\n$FREESPACE"
 echo -e "==============================================================================="
 #echo -e " \n\n\n\n"
 
