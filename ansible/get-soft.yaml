@@ -1,0 +1,19 @@
+---
+- hosts: all
+  user: vagrant
+  become: yes
+
+  tasks:
+  - name: install build tools
+    dnf:
+      name: '@Development tools'
+      state: present
+    when: ansible_os_family == 'RedHat'
+
+
+  - name: install build tools
+    apt:
+      name: 'build-essential'
+      state: present
+    when: ansible_os_family == 'Debian'
+
