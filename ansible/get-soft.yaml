@@ -4,16 +4,29 @@
   become: yes
 
   tasks:
-  - name: install build tools
-    dnf:
-      name: '@Development tools'
-      state: present
+  - block:
+      - name: install build tools
+        dnf:
+          name: '@Development tools'
+          state: present
+
+      - name: install chrony
+        dnf:
+          name: 'chrony'
+          state: present
+
     when: ansible_os_family == 'RedHat'
 
+  - block:
+    - name: install build tools
+      apt:
+        name: 'build-essential'
+        state: present
 
-  - name: install build tools
-    apt:
-      name: 'build-essential'
-      state: present
+    - name: install chrony
+      apt:
+        name: 'chrony'
+        state: present
+
     when: ansible_os_family == 'Debian'
 
