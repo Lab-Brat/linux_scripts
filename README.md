@@ -3,16 +3,16 @@
 This is a collection of scripts, written to automate some daily linux administation tasks.
 
 ## Table of Contents
-- [ansible](ansible)
-- [get-info.sh](get-info.sh)
-- [get_packs](get_packs)
-- [ssh](ssh)
-- [vagrant](vagrant)
+- [ansible](#ansible)
+- [get-info](#get-info)
+- [get_packs](#get_packs)
+- [ssh](#ssh)
+- [vagrant](#vagrant)
  
 ## ansible
 collection of ansible playbooks
  
-## get-info.sh
+## get-info
 output system specs: CPU, RAM, free space etc.
 
 ## get_packs
