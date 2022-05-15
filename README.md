@@ -8,6 +8,7 @@ This is a collection of scripts, written to automate some daily linux administat
 - [get_packs](#get_packs)
 - [ssh](#ssh)
 - [vagrant](#vagrant)
+- [install-rust.sh](install-rust.sh)
  
 ## ansible
 collection of ansible playbooks
@@ -23,3 +24,6 @@ scripts to automate ssh key creation
 
 ## vagrant
 storage for different Vagrantfiles
+
+## install-rust.sh
+install rust on a linux machine
