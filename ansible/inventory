@@ -2,7 +2,12 @@
 n1  ansible_host=node1.lab
 n2  ansible_host=node2.lab
 
+[do]
+n3  ansible_host=do.lab
+
 [nodes:vars]
 ansible_user=vagrant
-ansible_ssh_private_key_file=/home/labbrat/.ssh/vg_box
+
+[do:vars]
+ansible_user=boink
 
