@@ -14,3 +14,6 @@ They are meant to be used together with the Vagrant setup at ../vagrant.
 * if the connectivity is established, run playbook  
 ```ansible-playbook -i inventory <playbook>```
 
+## Playbooks
+* docker.yaml: install Docker on and enable in on Fedora server
+* init_config.yaml: inistial OS configuration
