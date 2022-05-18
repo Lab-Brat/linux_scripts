@@ -5,9 +5,15 @@ n2  ansible_host=node2.lab
 [do]
 n3  ansible_host=do.lab
 
+[jenkins]
+nj ansible_host=jenkins.lab
+
 [nodes:vars]
 ansible_user=vagrant
 
 [do:vars]
 ansible_user=boink
+
+[jenkins:vars]
+ansible_user=vagrant
 
