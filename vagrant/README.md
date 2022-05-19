@@ -20,6 +20,6 @@ ssh-keygen -P '' -q -f /home/$USER/vagrant/vg_box
 \* Windows users might need to turn off antivirus when running script for the first time, because Vagrant will need to download images and antivirus might block it.
 
 #### Contents
-- ansible_nodes_2: create 2 VMs with static IPs on bridge adapter, 1GB RAM and 1CPU
-- simple_nodes_2: create 2 VMs with static IPs on host-only adapter and NAT, 1GB RAM and 1CPU
+- ansible_nodes_2: create 2 VMs with static IPs on bridge adapter
+- simple_nodes_2: create 3 VMs with static IPs on host-only adapter and NAT
 
