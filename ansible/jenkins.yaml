@@ -7,7 +7,7 @@
     - init_pass: '/var/lib/docker/volumes/jenkins_jenkins-data/_data/secrets/initialAdminPassword'
 
   tasks:
-  - block: # install Jenkins in a container on Fedora
+  - block: # install Jenkins in a container on Fedora Linux
       - name: install docker-compose
         dnf:
           name: 'docker-compose'
@@ -25,7 +25,7 @@
           dest: "{{ src_jenkins }}"
           mode: '0644'
 
-      - name: launch docker-compose
+      - name: launch docker-compose to run and configure Jenkins
         community.docker.docker_compose:
           project_src: "{{ src_jenkins }}"
         register: output
