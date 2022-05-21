@@ -1,0 +1,33 @@
+---
+- hosts: all
+  become: yes
+  vars:
+    - bashrc: '/home/vagrant/.bashrc'
+
+  tasks:
+  - block: # install modern linux commands on Linux
+      - name: install commands with package manager
+        dnf:
+          name: '{{ item }}'
+          state: present
+        with_items:
+          - lsd
+          - bat
+
+      - name: add alias title
+        ansible.builtin.lineinfile:
+          path: "{{ bashrc }}"
+          line: "\n######## Custom Aliases Created By Ansible ########"
+
+      - name: add alias to lsd to bashrc
+        ansible.builtin.lineinfile:
+          path: "{{ bashrc }}"
+          line: "alias ls=lsd"
+   
+      - name: add alias to bat
+        ansible.builtin.lineinfile:
+          path: "{{ bashrc }}"
+          line: "alias cat=bat"
+
+    when: ansible_distribution == 'Fedora'
+
