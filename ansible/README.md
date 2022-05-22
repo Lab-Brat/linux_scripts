@@ -27,5 +27,5 @@ ansible-playbook -i inventory <playbook>.yaml
 ## Playbooks
 * docker.yaml: install Docker on and enable in on Fedora Linux
 * init_config.yaml: inistial OS configuration
-* jenkins.yaml: install Jenkins as a Docker container on Fedora Linux
-* moderen_commands.yaml: install modern alternative to classic linux commands, line lsd for ls, bat for cat etc.
+* jenkins.yaml: install Jenkins as a Docker container on Fedora Linux (requires ```docker-compose.yaml``` file in ```configs``` directory)
+* moderen_commands.yaml: install modern alternative to classic linux commands, line ```lsd``` for ```ls```, ```bat``` for ```cat``` etc.
