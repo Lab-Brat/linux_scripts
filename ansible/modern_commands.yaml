@@ -14,10 +14,19 @@
           - lsd
           - bat
 
+      - name: ensure that custom alias information line is there
+        lineinfile:
+          name: "{{ bashrc }}"
+          line: "######## Custom Aliases Created By Ansible ########"
+          state: present
+        check_mode: yes
+        register: custom_alias_notify
+
       - name: add alias title
         ansible.builtin.lineinfile:
           path: "{{ bashrc }}"
           line: "\n######## Custom Aliases Created By Ansible ########"
+        when: custom_alias_notify is changed
 
       - name: add alias to lsd to bashrc
         ansible.builtin.lineinfile:
