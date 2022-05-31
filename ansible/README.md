@@ -13,6 +13,10 @@ python3 -m pip install ansible
 ```
 ansible-galaxy collection install community.docker
 ```  
+* for app_forms.yaml external library is required, to install:
+```
+ansible-galaxy collection install community.postgresql
+```
 
 ## Run
 * test connectivity with the nodes:  
@@ -25,6 +29,7 @@ ansible-playbook -i inventory <playbook>.yaml
 ```
 
 ## Playbooks
+* app_forms: install flask-masque and all the dependencies on Alma Linux
 * docker.yaml: install Docker on and enable in on Fedora Linux
 * init_config.yaml: inistial OS configuration
 * jenkins.yaml: install Jenkins as a Docker container on Fedora Linux (requires ```docker-compose.yaml``` file in ```configs``` directory)
