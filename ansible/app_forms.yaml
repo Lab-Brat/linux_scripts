@@ -85,6 +85,12 @@
           regexp: "host    all             all             127.0.0.1/32            ident"
           line: "host    all             all             127.0.0.1/32            trust"
 
+      - name: change pg_hba.conf - change port
+        ansible.builtin.lineinfile:
+          path: '{{ pg_hba }}'
+          regexp: "port = 5432"
+          line: "port = 5433"
+
       - name: remove app database if it exists
         postgresql_db:
           state: absent
