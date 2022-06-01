@@ -2,16 +2,17 @@
 - hosts: all
   become: yes
   vars:
-    - user:    'skulikov'
+    - user:    'labbrat'
     - pg_conf: '/var/lib/pgsql/data/postgresql.conf'
     - pg_hba:  '/var/lib/pgsql/data/pg_hba.conf'
+    - gitrepo: 'https://github.com/Lab-Brat/flask_masque.git'
     - git_app: '/home/{{ user }}/infra-forms'
     - bashrc:  '/home/{{ user }}/.bashrc'
     - env_app: 'app.py'
     - env_mod: 'development'
-    - db_user: 'skulikov'
+    - db_user: 'labbrat'
     - db_name: 'infra_forms'
-    - db_pass: 'StrongPass'
+    - db_pass: 'password'
 
   tasks:
   - block:
@@ -37,9 +38,10 @@
 
       - name: clone github repository with forms app
         ansible.builtin.git:
-          repo: 'https://github.com/Lab-Brat/flask_masque.git'
+          repo: '{{ gitrepo }}'
           dest: '{{ git_app }}'
           clone: yes
+        become: false
 
       - name: add FLASK_APP environmental variable
         ansible.builtin.lineinfile:
@@ -59,12 +61,12 @@
           owner: "{{ user }}"
           group: "{{ user }}"
 
-      - name: "Findout if PostgreSQL is initialized"
+      - name: find out if PostgreSQL is initialized
         ansible.builtin.stat:
           path: "{{ pg_hba }}"
         register: postgres_data 
 
-      - name: initialize database
+      - name: initialize postgres
         shell: "/usr/bin/postgresql-setup --initdb"
         when: not postgres_data.stat.exists
 
@@ -83,30 +85,69 @@
           regexp: "host    all             all             127.0.0.1/32            ident"
           line: "host    all             all             127.0.0.1/32            trust"
 
+      - name: remove app database if it exists
+        postgresql_db:
+          state: absent
+          name: "{{ db_name }}"
+          port: 5433
+        become: yes
+        become_user: postgres
+
       - name: create app database
         postgresql_db:
           state: present
           name: "{{ db_name }}"
+          port: 5433
         become: yes
         become_user: postgres
   
-      - name: "Create db user"
+      - name: create db user
         postgresql_user:
           state: present
           name: "{{ db_user }}"
           password: "{{ db_pass }}"
+          port: 5433
         become: yes
         become_user: postgres
   
-      - name: "Grant db user access to app db"
+      - name: grant db user access to app db
         postgresql_privs:
           type: database
           database: "{{ db_name }}"
           roles: "{{ db_user }}"
           grant_option: no
           privs: all
+          port: 5433
         become: yes
         become_user: postgres
 
+      - name: allow port 5000 in firewalld 
+        ansible.posix.firewalld:
+          port: 5000/tcp
+          permanent: yes
+          state: enabled
+
+      - name: delete migrations folder if exists
+        file:
+          state: absent
+          path: "{{ git_app }}/migrations"
+
+      - name: initialize the database
+        command: "flask db init"
+        args:
+          chdir: "{{ git_app }}"
+        become: false
+
+      - name: migrate the database
+        command: "flask db migrate"
+        args:
+          chdir: "{{ git_app }}"
+        become: false
+
+      - name: upgrade the database
+        command: "flask db upgrade"
+        args:
+          chdir: "{{ git_app }}"
+        become: false
     when: ansible_distribution == 'AlmaLinux'
 
