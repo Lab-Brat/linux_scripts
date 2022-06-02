@@ -12,41 +12,33 @@ fn main() {
   ipv4.pop();
   
   // validate IP address and print output
-  let (ip, octet_count) = validate_ip(&ipv4);
-  if octet_count == 3 {
-    println!("{} is a valid IP address", ip);
-  } else if octet_count == -1 {
-    println!("{}", ip)
-  } else {
-    println!("Error: Too few octets");
-  }
+  let is_ip = val_ip(&ipv4);
+  if is_ip == true { println!("{} is a valid IP", ipv4); }
+  else { println!("{} is a NOT valid IP", ipv4); }
 }
 
-fn validate_ip(ipv4: &str) -> (String, i8) {
-  let bytes = ipv4.as_bytes();
-  let mut octet_count = 0_i8;
-  let mut j = 0;
+fn val_ip(ipv4: &str) -> bool {
+  // check the octet count and it's range
+  if check_symbols(ipv4) == true {
 
-  for (i, &item) in bytes.iter().enumerate() {
-    let cc = item as char;
-    // only allow numbers and .
-    if cc.is_numeric() || cc == '.' {
-      if item == b'.' {
-        octet_count = &octet_count + 1;
-  
-        // check if an octet is larger than 255 or too mant octets
-        let octet = &ipv4[j..i].parse::<i32>().unwrap();
-        j = i+1;
-        if octet > &255 {
-          return (String::from("Error: Octet is larger than 255"), -1);
-        } else if octet_count > 3 {
-          return (String::from("Error: Too many octets"), -1);
-        }
-      }
-    } else {
-      return (String::from("Error: wrong characher in IP address"), -1);
+    let split = ipv4.split('.');
+    let mut count = 0;
+
+    for s in split {
+      count += 1;
+      let octet = s.parse::<u16>().unwrap();
+      if octet > 255 { return false } 
     }
-
+    if count == 4 { return true }
   }
-  (String::from(ipv4), octet_count)
+  return false
+}
+
+fn check_symbols(ipv4: &str) -> bool {
+  // check if input only contains . and numbers
+  for cc in ipv4.chars() {
+    if cc=='.' || cc.is_numeric() { () } 
+    else { return false }
+  }
+  return true
 }
