@@ -8,6 +8,7 @@
     - gitrepo: 'https://github.com/Lab-Brat/flask_masque.git'
     - git_app: '/home/{{ user }}/infra-forms'
     - bashrc:  '/home/{{ user }}/.bashrc'
+    - dumps:   '/home/{{ user }}/dumps'
     - env_app: 'app.py'
     - env_mod: 'development'
     - db_user: 'labbrat'
@@ -42,6 +43,11 @@
           dest: '{{ git_app }}'
           clone: yes
         become: false
+
+      - name: Create and folder for database dumps
+        file:
+          state: directory
+          path: "{{ dumps }}"
 
       - name: add FLASK_APP environmental variable
         ansible.builtin.lineinfile:
