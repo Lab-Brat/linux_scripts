@@ -9,12 +9,12 @@
     - git_app: '/home/{{ user }}/infra-forms'
     - bashrc:  '/home/{{ user }}/.bashrc'
     - dumps:   '/home/{{ user }}/dumps'
-    - samples: '/home/{{ user }}/infra-forms/samples/add_entries.sh'
+    - samples: '/home/{{ user }}/infra-forms/samples'
     - env_app: 'app.py'
     - env_mod: 'development'
     - db_port: 5433
-    - db_user: 'labbrat'
-    - db_name: 'db_infra_forms'
+    - db_user: 'vagrant'
+    - db_name: 'masq_forms'
     - db_pass: 'password'
 
   tasks:
@@ -42,6 +42,21 @@
       - name: Disable SELinux
         ansible.posix.selinux:
           state: disabled
+        register: selinuxdisabled
+
+      - name: Reboot for SELinux change to take effect
+        shell: "sleep 5 && reboot"
+        async: 1
+        poll: 0
+        when: selinuxdisabled is changed
+
+      - name: Wait for the reboot to complete
+        wait_for_connection:
+          connect_timeout: 30
+          sleep: 5
+          delay: 5
+          timeout: 300
+        when: selinuxdisabled is changed
 
       - name: clone github repository with forms app
         ansible.builtin.git:
@@ -50,10 +65,12 @@
           clone: yes
         become: false
 
-      - name: Create and folder for database dumps
+      - name: Create the folder for database dumps
         file:
           state: directory
           path: "{{ dumps }}"
+          owner: "{{ user }}"
+          group: "{{ user }}"
 
       - name: add FLASK_APP environmental variable
         ansible.builtin.lineinfile:
@@ -169,8 +186,10 @@
         become: false
 
       - name: add sample data
-        command: "sh {{ samples }}"
+        command: "sh {{ samples }}/add_entries.sh"
         become: false
+        args:
+          chdir: "{{ samples }}"
         
     when: ansible_distribution == 'AlmaLinux'
 
