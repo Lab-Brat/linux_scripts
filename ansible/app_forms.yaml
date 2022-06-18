@@ -2,17 +2,19 @@
 - hosts: all
   become: yes
   vars:
-    - user:    'labbrat'
+    - user:    'vagrant'
     - pg_conf: '/var/lib/pgsql/data/postgresql.conf'
     - pg_hba:  '/var/lib/pgsql/data/pg_hba.conf'
     - gitrepo: 'https://github.com/Lab-Brat/flask_masque.git'
     - git_app: '/home/{{ user }}/infra-forms'
     - bashrc:  '/home/{{ user }}/.bashrc'
     - dumps:   '/home/{{ user }}/dumps'
+    - samples: '/home/{{ user }}/infra-forms/samples/add_entries.sh'
     - env_app: 'app.py'
     - env_mod: 'development'
+    - db_port: 5433
     - db_user: 'labbrat'
-    - db_name: 'infra_forms'
+    - db_name: 'db_infra_forms'
     - db_pass: 'password'
 
   tasks:
@@ -22,7 +24,7 @@
           name: '{{ item }}'
           state: present
         with_items:
-          - python-pip
+          - python3-pip
           - python3-psycopg2
           - git
           - postgresql
@@ -85,23 +87,23 @@
           regexp: "listen_addresses = 'localhost'"
           line: "listen_addresses = '*'"
 
+      - name: change pg_hba.conf - change port
+        ansible.builtin.lineinfile:
+          path: '{{ pg_conf }}'
+          regexp: "port = 5432"
+          line: "port = {{ db_port }}"
+
       - name: change pg_hba.conf
         ansible.builtin.lineinfile:
           path: '{{ pg_hba }}'
           regexp: "host    all             all             127.0.0.1/32            ident"
           line: "host    all             all             127.0.0.1/32            trust"
 
-      - name: change pg_hba.conf - change port
-        ansible.builtin.lineinfile:
-          path: '{{ pg_hba }}'
-          regexp: "port = 5432"
-          line: "port = 5433"
-
       - name: remove app database if it exists
         postgresql_db:
           state: absent
           name: "{{ db_name }}"
-          port: 5433
+          port: "{{ db_port }}"
         become: yes
         become_user: postgres
 
@@ -109,7 +111,7 @@
         postgresql_db:
           state: present
           name: "{{ db_name }}"
-          port: 5433
+          port: "{{ db_port }}"
         become: yes
         become_user: postgres
   
@@ -118,7 +120,7 @@
           state: present
           name: "{{ db_user }}"
           password: "{{ db_pass }}"
-          port: 5433
+          port: "{{ db_port }}"
         become: yes
         become_user: postgres
   
@@ -129,7 +131,7 @@
           roles: "{{ db_user }}"
           grant_option: no
           privs: all
-          port: 5433
+          port: "{{ db_port }}"
         become: yes
         become_user: postgres
 
@@ -161,5 +163,10 @@
         args:
           chdir: "{{ git_app }}"
         become: false
+
+      - name: add sample data
+        command: "sh {{ samples }}"
+        become: false
+        
     when: ansible_distribution == 'AlmaLinux'
 
