@@ -39,6 +39,10 @@
           - SQLAlchemy
           - psycopg2
 
+      - name: Disable SELinux
+        ansible.posix.selinux:
+          state: disabled
+
       - name: clone github repository with forms app
         ansible.builtin.git:
           repo: '{{ gitrepo }}'
