@@ -10,6 +10,7 @@ This is a collection of scripts, written to automate some daily linux administat
 - [exitVim](#exitvim)
 - [get-info](#get-info)
 - [install-rust](#install-rust)
+- [validate_ip](#validate_ip)
  
 ## ansible
 collection of ansible playbooks
