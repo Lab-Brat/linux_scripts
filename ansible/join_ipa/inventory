@@ -1,0 +1,14 @@
+[ipaclients]
+<host fqdn or IP>
+
+[ipaclients:vars]
+hostname=<new hostname>
+ipaclient_domain=<company.domain.com>
+ipaadmin_principal=<admin>
+ipaadmin_password=<password>
+
+ipaclient_mkhomedir=yes
+ipaclient_ssh_trust_dns=yes
+ipaclient_force_join=yes
+ipaclient_no_ntp=yes
+

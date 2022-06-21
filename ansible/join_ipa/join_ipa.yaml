@@ -1,0 +1,19 @@
+---
+- name: Playbook to configure IPA clients with username/password
+  hosts: ipaclients
+  become: true
+
+  pre_tasks:
+  - name: Change hostname
+    ansible.builtin.hostname:
+      name: "{{ hostname }}"
+
+  - name: Add hostname alias 
+    ansible.builtin.lineinfile:
+      path: /etc/hosts
+      regexp: '^127.0.0.1'
+      line: "127.0.0.1   localhost {{ hostname }}"
+
+  roles:
+  - role: freeipa.ansible_freeipa.ipaclient
+    state: present 
