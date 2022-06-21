@@ -7,8 +7,10 @@ This is a collection of scripts, written to automate some daily linux administat
 - [get_packs](#get_packs)
 - [ssh](#ssh)
 - [vagrant](#vagrant)
+- [exitVim](#exitvim)
 - [get-info](#get-info)
-- [install-rust.sh](install-rust.sh)
+- [install-rust](#install-rust)
+- [validate_ip](#validate_ip)
  
 ## ansible
 collection of ansible playbooks
@@ -22,11 +24,20 @@ scripts to automate ssh key creation
 ## vagrant
 storage for different Vagrantfiles
 
+## exitVim
+my pull request (not accepted yet) to the [how-to-exit-vim](https://github.com/hakluke/how-to-exit-vim) repository.  
+essentially, the script kills active vim session using cron job.  To use the script, put ```exitVim.sh``` in the ```$HOME``` directory.  
+Create a ```crontab``` to run it every minute
+```bash
+(crontab -l 2>/dev/null; echo "* * * * * /bin/bash /home/boink/exitVim.sh") | crontab -
+```  
+Done! 
+
 ## get-info
 output system specs: CPU, RAM, free space etc.
 
-## install-rust.sh
+## install-rust
 install rust on a linux machine
 
-## validate_ip.rs
+## validate_ip
 IPv4 address validator, takes an address in a form of string, output True/False
