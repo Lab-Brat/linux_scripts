@@ -25,11 +25,11 @@ scripts to automate ssh key creation
 storage for different Vagrantfiles
 
 ## exitVim
-my pull request (not accepted yet) to the [how-to-exit-vim](https://github.com/hakluke/how-to-exit-vim) repository.  
+my [pull request](https://github.com/hakluke/how-to-exit-vim/pull/246) (not accepted yet) to the [how-to-exit-vim](https://github.com/hakluke/how-to-exit-vim) repository.  
 essentially, the script kills active vim session using cron job.  To use the script, put ```exitVim.sh``` in the ```$HOME``` directory.  
 Create a ```crontab``` to run it every minute
 ```bash
-(crontab -l 2>/dev/null; echo "* * * * * /bin/bash /home/boink/exitVim.sh") | crontab -
+(crontab -l 2>/dev/null; echo "* * * * * /bin/bash /home/$USER/exitVim.sh") | crontab -
 ```  
 Done! 
 
