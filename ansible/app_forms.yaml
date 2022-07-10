@@ -2,23 +2,31 @@
 - hosts: all
   become: yes
   vars:
-    - user:    'vagrant'
+    - user:    'app_master'
     - pg_conf: '/var/lib/pgsql/data/postgresql.conf'
     - pg_hba:  '/var/lib/pgsql/data/pg_hba.conf'
     - gitrepo: 'https://github.com/Lab-Brat/flask_masque.git'
-    - git_app: '/home/{{ user }}/infra-forms'
-    - bashrc:  '/home/{{ user }}/.bashrc'
-    - dumps:   '/home/{{ user }}/dumps'
-    - samples: '/home/{{ user }}/infra-forms/samples'
+    - git_app: "/home/{{ user }}/flask_masque"
+    - bashrc:  "/home/{{ user }}/.bashrc"
+    - dumps:   "/home/{{ user }}/dumps"
+    - samples: "{{ git_app }}/samples"
     - env_app: 'app.py'
     - env_mod: 'development'
     - db_port: 5433
-    - db_user: 'vagrant'
+    - db_user: "{{ user }}"
     - db_name: 'masq_forms'
     - db_pass: 'password'
 
   tasks:
   - block:
+      - name: create user if it doesn't exist
+        ansible.builtin.user:
+          name: "{{ user }}"
+          shell: /bin/bash
+          home: "/home/{{ user }}"
+          groups: wheel
+          append: yes
+
       - name: install pip , git and PostgreSQL
         dnf:
           name: '{{ item }}'
@@ -33,11 +41,13 @@
       - name: install Python libraries
         pip: 
           name: "{{ item }}"
+          extra_args: --user
         with_items:
           - Flask
           - flask-migrate
           - SQLAlchemy
           - psycopg2
+        become_user: "{{ user }}"
 
       - name: Disable SELinux
         ansible.posix.selinux:
@@ -63,7 +73,21 @@
           repo: '{{ gitrepo }}'
           dest: '{{ git_app }}'
           clone: yes
-        become: false
+          update: no
+        become_user: "{{ user }}"
+
+      - name: make changed to configuration file
+        ansible.builtin.lineinfile:
+          path: '{{ git_app }}/config.ini'
+          regexp: "{{ item.regexp }}"
+          line: "{{ item.line }}"
+        loop:
+          - { regexp: 'dump_path = *', line: 'dump_path = {{ dumps }}' }
+          - { regexp: 'sample_path = *', line: 'sample_path = {{ samples }}' }
+          - { regexp: 'db_user = *', line: 'db_user = {{ db_user }}' }
+          - { regexp: 'db_name = *', line: 'db_name = {{ db_name }}' }
+          - { regexp: 'db_pass = *', line: 'db_pass = {{ db_pass }}' }
+          - { regexp: 'db_port = *', line: 'db_port = {{ db_port }}' }
 
       - name: Create the folder for database dumps
         file:
@@ -120,6 +144,11 @@
           regexp: "host    all             all             127.0.0.1/32            ident"
           line: "host    all             all             127.0.0.1/32            trust"
 
+      - name: restart postgresql for config changes to take effect
+        ansible.builtin.service:
+          name: postgresql
+          state: restarted
+
       - name: remove app database if it exists
         postgresql_db:
           state: absent
@@ -162,34 +191,44 @@
           permanent: yes
           state: enabled
 
-      - name: delete migrations folder if exists
-        file:
-          state: absent
+      - name: check if the migrations folder exists
+        ansible.builtin.stat:
           path: "{{ git_app }}/migrations"
-
+        register: migrations
+      
+      - ansible.builtin.debug:
+          var: migrations
+ 
       - name: initialize the database
-        command: "flask db init"
+        shell: '~/.local/bin/flask db init'
         args:
           chdir: "{{ git_app }}"
-        become: false
+        become_user: "{{ user }}"
+        when: not migrations.stat.exists
+
+      - name: make db up to date
+        shell: '~/.local/bin/flask db stamp head'
+        args:
+          chdir: "{{ git_app }}"
+        become_user: "{{ user }}"
 
       - name: migrate the database
-        command: "flask db migrate"
+        shell: '~/.local/bin/flask db migrate'
         args:
           chdir: "{{ git_app }}"
-        become: false
+        become_user: "{{ user }}"
 
       - name: upgrade the database
-        command: "flask db upgrade"
+        shell: '~/.local/bin/flask db upgrade'
         args:
           chdir: "{{ git_app }}"
-        become: false
+        become_user: "{{ user }}"
 
-      - name: add sample data
-        command: "sh {{ samples }}/add_entries.sh"
-        become: false
-        args:
-          chdir: "{{ samples }}"
+#      - name: add sample data
+#        command: "sh {{ samples }}/add_entries.sh"
+#        become: false
+#        args:
+#          chdir: "{{ samples }}"
         
     when: ansible_distribution == 'AlmaLinux'
 
