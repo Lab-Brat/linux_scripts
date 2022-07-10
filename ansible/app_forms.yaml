@@ -195,9 +195,6 @@
         ansible.builtin.stat:
           path: "{{ git_app }}/migrations"
         register: migrations
-      
-      - ansible.builtin.debug:
-          var: migrations
  
       - name: initialize the database
         shell: '~/.local/bin/flask db init'
