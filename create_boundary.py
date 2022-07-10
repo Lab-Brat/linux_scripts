@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import sys
 
 # ------------------------------ Script Logic ------------------------------- #
@@ -7,14 +8,16 @@ def get_boundary(line_len, title):
     with a title in the middle
     '''
     title_len = len(title)
+    is_even = (line_len + title_len) % 2 == 0
 
-    if (line_len + title_len) % 2 == 0:
+    if is_even:
         left_dash = right_dash = get_dash_length(line_len, title_len)
-    elif (line_len + title_len) % 2 != 0:
-        left_dash = get_dash_length(line_len, title_len)
-        right_dash = get_dash_length(line_len, title_len) + 1
+    else:
+        left_dash = right_dash = get_dash_length(line_len, title_len)
+        right_dash += 1
 
     print(f"# {'-'*left_dash} {title} {'-'*right_dash} #")
+
 
 def get_dash_length(line_len, title_len):
     '''
@@ -27,11 +30,16 @@ def get_dash_length(line_len, title_len):
 
 # ------------------------------- Run Script -------------------------------- #
 if __name__ == '__main__':
-    TITLE = sys.argv[1]
+    try:
+        TITLE = sys.argv[1]
+    except IndexError:
+        print('Please supply a title for the separator')
+        sys.exit(1)
+
     LINE_LEN = 79
 
     err = 'The title name is too long!'
-    get_boundary(LINE_LEN, TITLE) if LINE_LEN > len(TITLE) else print(err)
+    get_boundary(LINE_LEN, TITLE) if LINE_LEN-6 > len(TITLE) else print(err)
 
 
 # Run in the console:
