@@ -31,7 +31,7 @@ Create a ```crontab``` to run it every minute
 ```bash
 (crontab -l 2>/dev/null; echo "* * * * * /bin/bash /home/$USER/exitVim.sh") | crontab -
 ```  
-Done! 
+Profit! 
 
 ## get-info
 output system specs: CPU, RAM, free space etc.
