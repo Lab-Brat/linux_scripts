@@ -2,20 +2,35 @@
 - hosts: all
   become: yes
   vars:
-    - user:    'app_master'
-    - pg_conf: '/var/lib/pgsql/data/postgresql.conf'
-    - pg_hba:  '/var/lib/pgsql/data/pg_hba.conf'
-    - gitrepo: 'https://github.com/Lab-Brat/flask_masque.git'
-    - git_app: "/home/{{ user }}/flask_masque"
-    - bashrc:  "/home/{{ user }}/.bashrc"
-    - dumps:   "/home/{{ user }}/dumps"
-    - samples: "{{ git_app }}/samples"
-    - env_app: 'app.py'
-    - env_mod: 'development'
-    - db_port: 5433
-    - db_user: "{{ user }}"
-    - db_name: 'masq_forms'
-    - db_pass: 'password'
+    user:    'app_master'
+    pg_conf: '/var/lib/pgsql/data/postgresql.conf'
+    pg_hba:  '/var/lib/pgsql/data/pg_hba.conf'
+    gitrepo: 'https://github.com/Lab-Brat/flask_masque.git'
+    git_app: "/home/{{ user }}/flask_masque"
+    bashrc:  "/home/{{ user }}/.bashrc"
+    dumps:   "/home/{{ user }}/dumps"
+    samples: "{{ git_app }}/samples"
+    env_app: 'app.py'
+    env_mod: 'development'
+    db_port: 5433
+    db_user: "{{ user }}"
+    db_name: 'masq_forms'
+    db_pass: 'password'
+    os_environment:
+      - key: FLASK_APP
+        value: "{{ env_app }}"
+      - key: FLASK_ENV
+        value: 'development'
+      - key: DB_PORT
+        value: "{{ db_port }}"
+      - key: DB_USER
+        value: "{{ db_user }}"
+      - key: DB_NAME
+        value: "{{db_name}}"
+      - key: DB_PASS
+        value: "{{db_pass}}"
+      - key: DB_URI
+        value: "postgresql://{{db_user}}:{{db_pass}}@127.0.0.1:{{db_port}}/{{db_name}}"
 
   tasks:
   - block:
@@ -76,18 +91,13 @@
           update: no
         become_user: "{{ user }}"
 
-      - name: make changed to configuration file
+      - name: set environmental variables
         ansible.builtin.lineinfile:
-          path: '{{ git_app }}/config.ini'
-          regexp: "{{ item.regexp }}"
-          line: "{{ item.line }}"
-        loop:
-          - { regexp: 'dump_path = *', line: 'dump_path = {{ dumps }}' }
-          - { regexp: 'sample_path = *', line: 'sample_path = {{ samples }}' }
-          - { regexp: 'db_user = *', line: 'db_user = {{ db_user }}' }
-          - { regexp: 'db_name = *', line: 'db_name = {{ db_name }}' }
-          - { regexp: 'db_pass = *', line: 'db_pass = {{ db_pass }}' }
-          - { regexp: 'db_port = *', line: 'db_port = {{ db_port }}' }
+          dest: "/etc/environment"
+          state: present
+          regexp: "^{{ item.key }}="
+          line: "{{ item.key }}={{ item.value }}"
+        with_items: "{{ os_environment }}"
 
       - name: Create the folder for database dumps
         file:
@@ -95,16 +105,6 @@
           path: "{{ dumps }}"
           owner: "{{ user }}"
           group: "{{ user }}"
-
-      - name: add FLASK_APP environmental variable
-        ansible.builtin.lineinfile:
-          path: "{{ bashrc }}"
-          line: "export FLASK_APP={{ env_app }}"
-
-      - name: add FLASK_ENV environmental variable
-        ansible.builtin.lineinfile:
-          path: "{{ bashrc }}"
-          line: "export FLASK_ENV={{ env_mod }}"
       
       - name: change ownership of the app folder
         ansible.builtin.file:
@@ -189,6 +189,7 @@
         ansible.posix.firewalld:
           port: 5000/tcp
           permanent: yes
+          immediate: yes
           state: enabled
 
       - name: check if the migrations folder exists
@@ -222,10 +223,8 @@
         become_user: "{{ user }}"
 
       - name: add sample data
-        command: "sh add_entries.sh"
-        become: false
-        args:
-          chdir: "{{ samples }}"
+        command: "sh {{ samples }}/add_entries.sh"
+        become_user: "{{ user }}"
         
     when: ansible_distribution == 'AlmaLinux'
 
