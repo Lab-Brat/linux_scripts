@@ -29,7 +29,7 @@ ansible-playbook -i inventory <playbook>.yaml
 ```
 
 ## Playbooks
-* app_forms: install flask-masque and all the dependencies on Alma Linux
+* app_forms: install flask-masque web app, all the dependencies, PostgreSQL on AlmaLinux 8
 * docker.yaml: install Docker on and enable in on Fedora Linux
 * init_config.yaml: inistial OS configuration
 * jenkins.yaml: install Jenkins as a Docker container on Fedora Linux (requires ```docker-compose.yaml``` file in ```configs``` directory)
