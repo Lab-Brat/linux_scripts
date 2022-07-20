@@ -6,6 +6,10 @@
     - bashrc: "/home/{{ user }}/.bashrc_test"
 
   tasks:
+    - name: download and install deb packages
+      apt:
+        deb: https://github.com/Peltoche/lsd/releases/download/0.22.0/lsd-musl_0.22.0_amd64.deb
+
     - name: install stuff
       apt:
         name: '{{ item }}'
