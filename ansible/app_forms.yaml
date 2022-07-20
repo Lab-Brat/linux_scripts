@@ -64,18 +64,18 @@
           - psycopg2
         become_user: "{{ user }}"
 
-      - name: Disable SELinux
+      - name: disable SELinux
         ansible.posix.selinux:
           state: disabled
         register: selinuxdisabled
 
-      - name: Reboot for SELinux change to take effect
+      - name: reboot for SELinux change to take effect
         shell: "sleep 5 && reboot"
         async: 1
         poll: 0
         when: selinuxdisabled is changed
 
-      - name: Wait for the reboot to complete
+      - name: wait for the reboot to complete
         wait_for_connection:
           connect_timeout: 30
           sleep: 5
@@ -99,7 +99,7 @@
           line: "{{ item.key }}={{ item.value }}"
         with_items: "{{ os_environment }}"
 
-      - name: Create the folder for database dumps
+      - name: create the folder for database dumps
         file:
           state: directory
           path: "{{ dumps }}"
