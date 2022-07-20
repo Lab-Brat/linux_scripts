@@ -1,0 +1,47 @@
+---
+- hosts: all
+  become: yes
+  vars:
+    - user: 'labbrat'
+    - bashrc: "/home/{{ user }}/.bashrc_test"
+
+  tasks:
+    - name: install stuff
+      apt:
+        name: '{{ item }}'
+        state: present
+      with_items:
+        - vim
+        - git
+        - openconnect
+        - python3-venv
+        - python3-pip
+      when: ansible_os_family == "Debian"
+
+    - name: install Ansible
+      pip:
+        name: "{{ item }}"
+        extra_args: --user
+      with_items:
+        - ansible 
+      become_user: "{{ user }}"
+
+    - name: ensure that custom alias information line is there
+      lineinfile:
+        name: "{{ bashrc }}"
+        line: "######## Custom Aliases Created By Ansible ########"
+        state: present
+      check_mode: yes
+      register: custom_alias_notify
+
+    - name: add alias title
+      lineinfile:
+        path: "{{ bashrc }}"
+        line: "\n######## Custom Aliases Created By Ansible ########"
+      when: custom_alias_notify is changed
+ 
+    - name: add alias for python3
+      ansible.builtin.lineinfile:
+        path: "{{ bashrc }}"
+        line: "alias py=python3"
+
