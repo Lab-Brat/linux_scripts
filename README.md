@@ -1,6 +1,6 @@
 # Linux scripts
 ## About the Repo
-This is a collection of scripts, written to automate some daily linux administation tasks.
+This repository is a collection of scripts, written to automate some daily linux administation tasks.
 
 ## Table of Contents
 - [ansible](#ansible)
