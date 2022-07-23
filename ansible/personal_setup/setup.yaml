@@ -55,12 +55,9 @@
         path: "{{ bashrc }}"
         line: "{{ item }}"
       loop:
-        - export scripts='/home/labbrat/scripts'
+        - export scripts="/home/{{ user }}/scripts"
         - export PATH=$PATH:$scripts
-        - export pip_path='/home/labbrat/.local/bin'
+        - export pip_path="/home/{{ user }}/.local/bin"
         - export PATH=$PATH:$pip_path
         - alias py=python3
         - alias gt="git add . && git commit -m $CMT && git push
-      tags:
-        - brc
-
