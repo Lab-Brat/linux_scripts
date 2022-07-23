@@ -50,8 +50,17 @@
         line: "\n######## Custom Aliases Created By Ansible ########"
       when: custom_alias_notify is changed
  
-    - name: add alias for python3
+    - name: add aliases and PATH to bashrc
       ansible.builtin.lineinfile:
         path: "{{ bashrc }}"
-        line: "alias py=python3"
+        line: "{{ item }}"
+      loop:
+        - export scripts='/home/labbrat/scripts'
+        - export PATH=$PATH:$scripts
+        - export pip_path='/home/labbrat/.local/bin'
+        - export PATH=$PATH:$pip_path
+        - alias py=python3
+        - alias gt="git add . && git commit -m $CMT && git push
+      tags:
+        - brc
 
