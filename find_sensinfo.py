@@ -17,12 +17,8 @@ except IndexError:
 
 def split_dir(exclude_dir):
     split_dir = exclude_dir.split(',')
-    flags = ('--exclude-dir,'*len(split_dir)).split(',')    
-    all = []
-    for dir, flag in zip(split_dir, flags):
-        all.append(flag)
-        all.append(dir)
-    return all
+    flags = ('--exclude-dir,'*len(split_dir)).split(',')
+    return [flag for dir in zip(flags, split_dir) for flag in dir] 
 
 def get_output(command):
     return subprocess.run(command, capture_output=True)
@@ -41,3 +37,13 @@ print("Found IP addresses: ")
 print_decode_output(get_output(grep_ip))
 print("Found Passwords: ")
 print_decode_output(get_output(grep_pass))
+
+# run in terminal
+# ./find_sensinfo.py /opt/data 'folder1,folder2,venv'
+#
+# Result:
+# Found IP addresses: 
+# /opt/data/secret_file.txt:10.10.1.13
+
+# Found Passwords: 
+# /opt/data/secret_file.txt:my password: 123456
