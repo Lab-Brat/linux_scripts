@@ -2,15 +2,22 @@
 import sys
 import subprocess
 
-path = str(sys.argv[1])
+try:
+    path = str(sys.argv[1])
+except IndexError:
+    print('[ERROR!] Please specify grep location')
+    sys.exit(1)
+
 try:
     exclude_dir = sys.argv[2]
-except:
+except IndexError:
+    print('[WARNING!] exclude-dir not specified, '
+          'using defauls: venv,__pycache')
     exclude_dir = 'venv,__pycache__'
 
 def split_dir(exclude_dir):
     split_dir = exclude_dir.split(',')
-    flags = ('--exclude-dir,'*len(split_dir)).split(',')
+    flags = ('--exclude-dir,'*len(split_dir)).split(',')    
     all = []
     for dir, flag in zip(split_dir, flags):
         all.append(flag)
