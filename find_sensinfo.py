@@ -16,14 +16,24 @@ except IndexError:
     exclude_dir = 'venv,__pycache__'
 
 def split_dir(exclude_dir):
+    '''
+    Read a string of excluded directories,
+    return a list of type ['--exclude-dir', 'dir', ...]
+    '''
     split_dir = exclude_dir.split(',')
     flags = ('--exclude-dir,'*len(split_dir)).split(',')
     return [flag for dir in zip(flags, split_dir) for flag in dir] 
 
 def get_output(command):
+    '''
+    Get output (in bytes) from running grep
+    '''
     return subprocess.run(command, capture_output=True)
 
 def print_decode_output(output):
+    '''
+    Decoded the output into string a print it line by line
+    '''
     for line in output.stdout.decode('utf-8').split('\n'):
         print(line)
 
