@@ -9,6 +9,7 @@ This repository is a collection of scripts, written to automate some daily linux
 - [vagrant](#vagrant)
 - [exitVim](#exitvim)
 - [get-info](#get-info)
+- [find_sensinfo](#find_sensinfo)
 - [install-rust](#install-rust)
 - [validate_ip](#validate_ip)
  
@@ -35,6 +36,9 @@ Profit!
 
 ## get-info
 output system specs: CPU, RAM, free space etc.
+
+## find_sensinfo
+Find IP address and passwordd in a every file.
 
 ## install-rust
 install rust on a linux machine
