@@ -12,7 +12,7 @@ try:
     exclude_dir = sys.argv[2]
 except IndexError:
     print('[WARNING!] exclude-dir not specified, '
-          'using defauls: venv,__pycache')
+          'using defauls: venv,__pycache__')
     exclude_dir = 'venv,__pycache__'
 
 def split_dir(exclude_dir):
