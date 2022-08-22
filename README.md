@@ -38,7 +38,7 @@ Profit!
 output system specs: CPU, RAM, free space etc.
 
 ## find_sensinfo
-Find IP address and passwordd in a every file.
+Find IP address and password in a every file.
 
 ## install-rust
 install rust on a linux machine
