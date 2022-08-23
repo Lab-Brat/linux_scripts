@@ -11,6 +11,7 @@ This repository is a collection of scripts, written to automate some daily linux
 - [get-info](#get-info)
 - [find_sensinfo](#find_sensinfo)
 - [install-rust](#install-rust)
+- [show_plan](#show_plan)
 - [validate_ip](#validate_ip)
  
 ## ansible
@@ -38,10 +39,24 @@ Profit!
 output system specs: CPU, RAM, free space etc.
 
 ## find_sensinfo
-Find IP address and password in a every file.
+find IP address and password in a every file.
 
 ## install-rust
 install rust on a linux machine
+
+## show_plan
+read ```__PLAN__.md``` and echo the things planned for current month.  
+Example of a plan
+```
+#### Programming
+Python
+* Fluent Python (AugSep2022)
+C
+* Dr. Chukc's C Youtube course (Sep2022)
+Javascript
+* Udemy course
+```
+the script will use ```date``` command to find current month (Aug,Sep,Oct etc.) in the plan, and then print the line without the part in the parentheses.
 
 ## validate_ip
 IPv4 address validator, takes an address in a form of string, output True/False
