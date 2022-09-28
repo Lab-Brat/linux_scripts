@@ -1,6 +1,0 @@
-[self]
-127.0.0.1
-
-[self:vars]
-ansible_user = labbrat
-
