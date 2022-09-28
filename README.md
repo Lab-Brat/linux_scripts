@@ -46,6 +46,9 @@ install rust on a linux machine
 
 ## show_plan
 read ```__PLAN__.md``` and echo the things planned for current month.  
+Available options:
+* all  : show plan for all the months
+* next : show plan for next month
 Example of a plan
 ```
 #### Programming
