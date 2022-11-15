@@ -1,0 +1,10 @@
+[Unit]
+Description={{ desc }}
+Requires={{ service }}
+
+[Timer]
+Unit={{ service }}
+OnCalendar=*-*-* {{ time_interval}}
+
+[Install]
+WantedBy=multi-user.target
