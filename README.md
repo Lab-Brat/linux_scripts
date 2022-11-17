@@ -3,7 +3,6 @@
 This repository is a collection of scripts, written to automate some daily linux administation tasks.
 
 ## Table of Contents
-- [ansible](#ansible)
 - [get_packs](#get_packs)
 - [ssh](#ssh)
 - [vagrant](#vagrant)
@@ -13,9 +12,6 @@ This repository is a collection of scripts, written to automate some daily linux
 - [install-rust](#install-rust)
 - [show_plan](#show_plan)
 - [validate_ip](#validate_ip)
- 
-## ansible
-collection of ansible playbooks
 
 ## get_packs
 download all package dependencies from the repository
