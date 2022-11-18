@@ -7,6 +7,7 @@ This repository is a collection of scripts, written to automate some daily linux
 - [ssh](#ssh)
 - [systemd_service](#systemd_service)
 - [vagrant](#vagrant)
+- [admin](#admin)
 - [create_boundary](#create_boundary)
 - [exitVim](#exitvim)
 - [get-info](#get-info)
@@ -27,6 +28,9 @@ Python script that creates systemd service and timer.
 
 ## vagrant
 Storage for different Vagrantfiles.
+
+## admin
+One script to run them all.
 
 ## create_boundary
 Dynamically create line separators in Python programs.
