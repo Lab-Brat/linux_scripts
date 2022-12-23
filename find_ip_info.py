@@ -14,17 +14,21 @@ def _get_grep(property, ip):
     '''
     grep for a particular property
     '''
-    result = subprocess.check_output(
-                 f'whois {ip} | grep -i {property}', 
-                 shell = True, text = True)
+    result = ''
+    i = 0
+    while result == '':
+        result = subprocess.check_output(
+                    f'whois {ip} | grep -i {property[i]} | head -n 1', 
+                    shell = True, text = True)
+        i += 1
     return result.split(':')[-1].replace(' ', '').replace('\n', '')
 
 def get_info_local(ip):
     '''
     Use locally installed whois command to get information
     '''
-    orgname = _get_grep('orgname', ip)
-    country = _get_grep('country', ip)
+    orgname = _get_grep(['role', 'org.*name', 'netname'], ip)
+    country = _get_grep(['country'], ip)
     return {'ip': ip, 'org': orgname, 'country': country}
 
 def pretty_print(response):
