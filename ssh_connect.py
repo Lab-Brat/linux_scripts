@@ -16,6 +16,9 @@ class SSHConnect():
         self.cred = self.find_env_cred(cred_name)
 
     def find_env_cred(self, cred_name):
+        '''
+        Read available credentials and find the specified one.
+        '''
         i = 1
         while True:
             name = os.getenv(f'sc_name_{i}')
@@ -30,6 +33,9 @@ class SSHConnect():
                 sys.exit(0)
 
     def _connect(self):
+        '''
+        Establish a SSH connection.
+        '''
         self.client = SSHClient()
         self.client.set_missing_host_key_policy(AutoAddPolicy())
         self.client.load_system_host_keys()
@@ -37,6 +43,9 @@ class SSHConnect():
                             username=self.cred[0], key_filename=self.cred[1])
 
     def _interactive(self, chan):
+        '''
+        Launch an interactive Terminal.
+        '''
         oldtty = termios.tcgetattr(sys.stdin)
         try:
             tty.setraw(sys.stdin.fileno())
@@ -64,6 +73,9 @@ class SSHConnect():
             termios.tcsetattr(sys.stdin, termios.TCSADRAIN, oldtty)
     
     def terminal(self):
+        '''
+        Connect with an interactive Terminal.
+        '''
         self._connect()
         try:
             channel = self.client.get_transport().open_session()
@@ -75,6 +87,9 @@ class SSHConnect():
             print("Failed")
 
     def cmd(self, cmd):
+        '''
+        Run a single command and show output.
+        '''
         self._connect()
         stdin, stdout, stderr = self.client.exec_command(cmd)
         for line in stdout.readlines():
