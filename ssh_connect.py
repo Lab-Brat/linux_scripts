@@ -71,6 +71,16 @@ class SSHConnect():
         except Exception:
             print("Failed")
 
+    def cmd(self, cmd):
+        self._connect()
+        stdin, stdout, stderr = self.client.exec_command(cmd)
+        for line in stdout.readlines():
+            print(line.replace('\n', ''))
+        for line in stderr.readlines():
+            print(line.replace('\n', ''))
+        self.client.close()
+
+
 if __name__ == '__main__':
     sc = SSHConnect(SSH_USER, SSH_HOST, SSH_PORT, SSH_KEY)
-    sc.terminal()
+    sc.cmd('df -h /')
