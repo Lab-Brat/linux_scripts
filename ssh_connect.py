@@ -2,36 +2,39 @@
 import select
 import socket
 import sys
+import os
 import termios
 import tty
 from paramiko.py3compat import u
 from paramiko.client import SSHClient, AutoAddPolicy
 
 
-# ------------------------- User Defined Variables -------------------------- #
-
-SSH_USER = "vagrant"
-SSH_HOST = "192.168.56.111"
-SSH_PORT = 22
-SSH_KEY  = 'vagrant/vg_box'
-
-# ------------------------- User Defined Variables -------------------------- #
-
-
 class SSHConnect():
-    def __init__(self, user, host, port, key):
-        self.ssh_user = user
-        self.ssh_host = host
-        self.ssh_port = port
-        self.ssh_key  = key
+    def __init__(self, cred_name, host):
+        self.host = host
+        self.port = 22
+        self.cred = self.find_env_cred(cred_name)
+
+    def find_env_cred(self, cred_name):
+        i = 1
+        while True:
+            name = os.getenv(f'sc_name_{i}')
+            user = os.getenv(f'sc_user_{i}')
+            key  = os.getenv(f'sc_key_{i}')
+            if user or key:
+                i += 1
+                if name == cred_name:
+                    return (user, key)
+            else:
+                print('Credentials were not found')
+                sys.exit(0)
 
     def _connect(self):
         self.client = SSHClient()
         self.client.set_missing_host_key_policy(AutoAddPolicy())
         self.client.load_system_host_keys()
-        self.client.connect(SSH_HOST, port=SSH_PORT,
-                                 username=SSH_USER,
-                                 key_filename=SSH_KEY)
+        self.client.connect(self.host, port=self.port,
+                            username=self.cred[0], key_filename=self.cred[1])
 
     def _interactive(self, chan):
         oldtty = termios.tcgetattr(sys.stdin)
@@ -82,5 +85,7 @@ class SSHConnect():
 
 
 if __name__ == '__main__':
-    sc = SSHConnect(SSH_USER, SSH_HOST, SSH_PORT, SSH_KEY)
+    cred_name = sys.argv[1]
+    host = sys.argv[2]
+    sc = SSHConnect(cred_name, host)
     sc.cmd('df -h /')
