@@ -4,7 +4,6 @@ This repository is a collection of scripts, written to automate some daily linux
 
 ## Table of Contents
 - [get_packs](#get_packs)
-- [ssh](#ssh)
 - [systemd_service](#systemd_service)
 - [vagrant](#vagrant)
 - [admin](#admin)
@@ -15,13 +14,11 @@ This repository is a collection of scripts, written to automate some daily linux
 - [find_sensinfo](#find_sensinfo)
 - [install-rust](#install-rust)
 - [show_plan](#show_plan)
+- [ssh_connect](#ssh_connect)
 - [validate_ip](#validate_ip)
 
 ## get_packs
 Download all package dependencies from the repository.
-
-## ssh
-Scripts to automate ssh key creation.
 
 ## systemd_service
 Python script that creates systemd service and timer.
@@ -73,5 +70,9 @@ Javascript
 ```
 the script will use ```date``` command to find current month (Aug,Sep,Oct etc.) in the plan, and then print the line without the part in the parentheses.
 
+## ssh_connect
+Script that assists with SSH connection and SSH config management.
+
 ## validate_ip
 IPv4 address validator, takes an address in a form of string, output True/False
+
