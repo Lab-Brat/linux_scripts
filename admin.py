@@ -2,6 +2,7 @@
 import click
 import os
 import ssh_connect
+import find_ip_info
 
 
 @click.group(invoke_without_command=False)
@@ -29,6 +30,12 @@ def ssh(name, host, terminal, command):
     elif command:
         sc.cmd(command)
 
+@adm.command()
+@click.option('-i', '--ips', required=True, type=str)
+def ipfind(ips):
+    for ip in ips.split(','):
+        ip_info  = find_ip_info.get_info_local(ip)
+        find_ip_info.pretty_print(ip_info)
 
 if __name__ == '__main__':
     adm()
