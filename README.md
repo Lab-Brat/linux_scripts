@@ -12,7 +12,6 @@ This repository is a collection of scripts, written to automate some daily linux
 - [get-info](#get-info)
 - [find_ip_info](#find_ip_info)
 - [find_sensinfo](#find_sensinfo)
-- [install-rust](#install-rust)
 - [show_plan](#show_plan)
 - [ssh_connect](#ssh_connect)
 - [validate_ip](#validate_ip)
@@ -49,9 +48,6 @@ Find IP address provider using whois or API.
 
 ## find_sensinfo
 Find IP address and password in a every file.
-
-## install-rust
-Install rust on a linux machine.
 
 ## show_plan
 Read ```__PLAN__.md``` and echo the things planned for current month.  
