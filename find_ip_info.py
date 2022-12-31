@@ -40,18 +40,15 @@ def pretty_print(response):
     print(f"Country:  {response['country']}\n")
 
 
-# Parse all IP addresses from CLI and search info
-try:
-    for ip in sys.argv[1].split(','):
-        # ip_info = get_info(ip)
-        # orgname = ip_info['asn']['name']
-        # country = ip_info['countryname']
-        ip_info  = get_info_local(ip)
-        pretty_print(ip_info)
-except IndexError:
-    print('Argument format: ip or ip1,ip2,ip3')
+if __name__ == '__main__':
+    # Parse all IP addresses from CLI and search info
+    try:
+        for ip in sys.argv[1].split(','):
+            ip_info  = get_info_local(ip)
+            pretty_print(ip_info)
+    except IndexError:
+        print('Argument format: ip or ip1,ip2,ip3')
 
-# get_info_local('159.223.209.128')
 
 # Run in terminal
 # ./find_ip_info.py 8.8.8.8
