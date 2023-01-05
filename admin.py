@@ -3,6 +3,7 @@ import click
 import os
 import ssh_connect
 import find_ip_info
+import create_boundary
 
 
 @click.group(invoke_without_command=False)
@@ -36,6 +37,12 @@ def ipfind(ips):
     for ip in ips.split(','):
         ip_info  = find_ip_info.get_info_local(ip)
         find_ip_info.pretty_print(ip_info)
+
+@adm.command()
+@click.option('-t', '--title', required=True)
+def separator(title):
+    create_boundary.get_boundary(title)
+
 
 if __name__ == '__main__':
     adm()
