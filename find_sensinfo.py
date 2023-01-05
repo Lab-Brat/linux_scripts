@@ -9,6 +9,8 @@ def split_dir(exclude_dir):
     Read a string of excluded directories,
     return a list of type ['--exclude-dir', 'dir', ...]
     '''
+    if exclude_dir is None:
+        return []
     split_dir = exclude_dir.split(',')
     flags = ('--exclude-dir,'*len(split_dir)).split(',')
     return [flag for dir in zip(flags, split_dir) for flag in dir] 
@@ -26,7 +28,7 @@ def print_decode_output(output):
     for line in output.stdout.decode('utf-8').split('\n'):
         print(line)
 
-def find_info(path, exclude_dir=''):
+def find_info(path, exclude_dir):
     '''
     Grep regular expressions, output all matches.
     '''

@@ -3,6 +3,7 @@ import click
 import os
 import ssh_connect
 import find_ip_info
+import find_sensinfo
 import create_boundary
 
 
@@ -42,6 +43,12 @@ def ipfind(ips):
 @click.option('-t', '--title', required=True)
 def separator(title):
     create_boundary.get_boundary(title)
+
+@adm.command()
+@click.option('-p', '--path', required=True, type=str)
+@click.option('-e', '--exclude', required=False, type=str)
+def sensfind(path, exclude):
+    find_sensinfo.find_info(path, exclude)
 
 
 if __name__ == '__main__':
