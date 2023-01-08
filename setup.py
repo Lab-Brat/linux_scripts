@@ -6,8 +6,9 @@ setup(
     py_modules=['yourscript'],
     install_requires=[
         'Click',
-	'paramiko',
-	'requests',
+        'paramiko',
+        'requests',
+        'jinja2',
     ],
     entry_points={
         'console_scripts': [
