@@ -1,10 +1,12 @@
 #!venv/bin/python
 import click
 import os
-import ssh_connect
+import json
+import create_boundary
 import find_ip_info
 import find_sensinfo
-import create_boundary
+import ssh_connect
+import systemd
 
 
 @click.group(invoke_without_command=False)
@@ -50,6 +52,20 @@ def separator(title):
 def sensfind(path, exclude):
     find_sensinfo.find_info(path, exclude)
 
+@adm.command()
+@click.option('-s', '--service', is_flag=True)
+@click.option('-t', '--timer', is_flag=True)
+@click.option('-f', '--filename', type=str)
+@click.option('-v', '--vars')
+def sysd(service, timer, filename, vars):
+    vars = json.loads(vars)
+    if service:
+        template = 'service.j2'
+    elif timer:
+        template = 'timer.j2'
+    systemd.create_config(filename, template, vars)
+    systemd.reload()
+    
 
 if __name__ == '__main__':
     adm()
