@@ -11,28 +11,22 @@ def read_config(config):
     with open(f"{main_dir}/templates/{config}", "r") as file:
         return file.read()
 
-def create_config(template, vars, name):
+def create_config(filename, template, vars):
     '''
     Read Jinja2 temlate, variables and output filename,
     create a configuration file in ./templates
     '''
-    template_data = read_config(template)
-    template = Template(template_data)
+    template = Template(read_config(template))
     configuration_data = template.render(vars)
 
-    output_file = f'{main_dir}/templates/{name}'
-    with open(output_file, 'w') as file:
+    with open(f'/etc/systemd/system/{filename}', 'w') as file:
         file.write(configuration_data)
 
-def copy_and_reload(*args):
+def reload():
     '''
-    Copy existing configuration files to systemd folder
+    Reload systemd.
     '''
-    files = ''
-    for file in args:
-        files += f'{main_dir}/templates/{file} '
-    os.system(f'cp {files} /etc/systemd/system')
-    os.system(f'systemctl daemon-reload')
+    os.system(f'sudo systemctl daemon-reload')
 
 
 if __name__ == '__main__':
@@ -41,16 +35,16 @@ if __name__ == '__main__':
     timer_template = 'timer.j2'
 
     # service name and variables
-    service_name = '<name>.service'
-    service_vars = {'desc': '<Add Description here>', 
-                            'exec': '</path/to/executable/script>'}
+    service_name = 'test.service'
+    service_vars = {'desc': 'Test service', 
+                    'exec': '/home/labbrat/test.sh'}
 
     # timer name and variables
-    timer_name = '<name>.timer'
-    timer_vars = {'desc': '<Add Description here>', 
-                          'service': service_name,
-                          'time_interval': '00:00:00'}
+    timer_name = 'test.timer'
+    timer_vars = {'desc': 'Timer for Test service', 
+                  'service': service_name,
+                  'time_interval': '00:00:00'}
 
-    create_config(service_template, service_vars, service_name)
-    create_config(timer_template, timer_vars, timer_name)
-    copy_and_reload(service_name, timer_name)
+    create_config(service_name, service_template, service_vars)
+    create_config(timer_name, timer_template, timer_vars)
+    reload()
