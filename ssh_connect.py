@@ -10,15 +10,16 @@ from paramiko.client import SSHClient, AutoAddPolicy
 
 
 class SSHConnect():
-    def __init__(self, cred_name, host):
+    def __init__(self, host):
         self.host = host
         self.port = 22
-        self.cred = self.find_env_cred(cred_name)
+        self.cred = self.find_env_cred()
 
-    def find_env_cred(self, cred_name):
+    def find_env_cred(self):
         '''
         Read available credentials and find the specified one.
         '''
+        cred_name = os.getenv('admin_ssh_cred')
         i = 1
         while True:
             name = os.getenv(f'sc_name_{i}')

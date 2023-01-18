@@ -23,12 +23,11 @@ def show():
         click.echo(f'({i+1}) {file}')
 
 @adm.command()
-@click.option('-n', '--name', required=True, type=str)
 @click.option('-h', '--host', required=True, type=str)
 @click.option('-t', '--terminal', is_flag=True)
 @click.option('-c', '--command', type=str)
-def ssh(name, host, terminal, command):
-    sc = ssh_connect.SSHConnect(name, host)
+def ssh(host, terminal, command):
+    sc = ssh_connect.SSHConnect(host)
     if terminal:
         sc.terminal()
     elif command:
