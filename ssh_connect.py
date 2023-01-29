@@ -41,10 +41,11 @@ class SSHConnect():
         self.client.set_missing_host_key_policy(AutoAddPolicy())
         self.client.load_system_host_keys()
         self.client.connect(self.host, port=self.port,
-                            username=self.cred[0], key_filename=self.cred[1])
+            username=self.cred[0], key_filename=self.cred[1])
 
     def _interactive(self, chan):
         '''
+        [ DEPRECARED ]
         Launch an interactive Terminal.
         '''
         oldtty = termios.tcgetattr(sys.stdin)

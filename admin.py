@@ -24,14 +24,10 @@ def show():
 
 @adm.command()
 @click.option('-h', '--host', required=True, type=str)
-@click.option('-t', '--terminal', is_flag=True)
 @click.option('-c', '--command', type=str)
-def ssh(host, terminal, command):
+def ssh(host, command):
     sc = ssh_connect.SSHConnect(host)
-    if terminal:
-        sc.terminal()
-    elif command:
-        sc.cmd(command)
+    if command: sc.cmd(command)
 
 @adm.command()
 @click.option('-i', '--ips', required=True, type=str)
