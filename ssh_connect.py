@@ -43,6 +43,18 @@ class SSHConnect():
         self.client.connect(self.host, port=self.port,
             username=self.cred[0], key_filename=self.cred[1])
 
+    def cmd(self, cmd):
+        '''
+        Run a single command and show output.
+        '''
+        self._connect()
+        stdin, stdout, stderr = self.client.exec_command(cmd)
+        for line in stdout.readlines():
+            print(line.replace('\n', ''))
+        for line in stderr.readlines():
+            print(line.replace('\n', ''))
+        self.client.close()
+    
     def _interactive(self, chan):
         '''
         [ DEPRECARED ]
@@ -73,9 +85,10 @@ class SSHConnect():
                     chan.send(x)
         finally:
             termios.tcsetattr(sys.stdin, termios.TCSADRAIN, oldtty)
-    
+
     def terminal(self):
         '''
+        [ DEPRECARED ]
         Connect with an interactive Terminal.
         '''
         self._connect()
@@ -87,18 +100,6 @@ class SSHConnect():
             self.client.close()
         except Exception:
             print("Failed")
-
-    def cmd(self, cmd):
-        '''
-        Run a single command and show output.
-        '''
-        self._connect()
-        stdin, stdout, stderr = self.client.exec_command(cmd)
-        for line in stdout.readlines():
-            print(line.replace('\n', ''))
-        for line in stderr.readlines():
-            print(line.replace('\n', ''))
-        self.client.close()
 
 
 if __name__ == '__main__':
