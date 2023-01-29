@@ -77,12 +77,13 @@ class SSHConnect():
         '''
         key_content = self._read_key()
         self._connect(auth_method='password')
+
         stdin, stdout, stderr = self.client.exec_command('ls -l ~/.ssh')
-        if "No such file" in stderr.readlines()[0]:
+        if "No such file" in str(stderr.readlines()):
             self.client.exec_command('mkdir ~/.ssh')
             print('SSH directory created')
 
-        cmd = f'echo {key_content} >> ~/.ssh/authorized_keys'
+        cmd = f'echo "{key_content}" >> ~/.ssh/authorized_keys'
         stdin, stdout, stderr = self.client.exec_command(cmd)
         for line in stdout.readlines():
             print(line.replace('\n', ''))
