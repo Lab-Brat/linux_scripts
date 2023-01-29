@@ -24,10 +24,12 @@ def show():
 
 @adm.command()
 @click.option('-h', '--host', required=True, type=str)
+@click.option('-k', '--add-key', is_flag=True)
 @click.option('-c', '--command', type=str)
-def ssh(host, command):
+def ssh(host, add_key, command):
     sc = ssh_connect.SSHConnect(host)
     if command: sc.cmd(command)
+    elif add_key: sc.add_key()
 
 @adm.command()
 @click.option('-i', '--ips', required=True, type=str)

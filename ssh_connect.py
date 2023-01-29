@@ -19,42 +19,78 @@ class SSHConnect():
         '''
         Read available credentials and find the specified one.
         '''
-        cred_name = os.getenv('admin_ssh_cred')
+        cred_name = os.getenv('ADMIN_SSH_CRED')
         i = 1
         while True:
             name = os.getenv(f'sc_name_{i}')
             user = os.getenv(f'sc_user_{i}')
             key  = os.getenv(f'sc_key_{i}')
+            pasw = os.getenv(f'sc_pas_{i}')
             if user or key:
                 i += 1
                 if name == cred_name:
-                    return (user, key)
+                    return (user, key, pasw)
             else:
                 print('Credentials were not found')
                 sys.exit(0)
 
-    def _connect(self):
+    def _connect(self, auth_method):
         '''
         Establish a SSH connection.
         '''
+        print(self.cred)
         self.client = SSHClient()
         self.client.set_missing_host_key_policy(AutoAddPolicy())
         self.client.load_system_host_keys()
-        self.client.connect(self.host, port=self.port,
-            username=self.cred[0], key_filename=self.cred[1])
+        if auth_method == 'key':
+            self.client.connect(self.host,
+                port=self.port,
+                username=self.cred[0], key_filename=self.cred[1])
+        elif auth_method == 'password':
+            self.client.connect(self.host,
+                port=self.port,
+                username=self.cred[0], password=self.cred[2],
+                allow_agent=False, look_for_keys=False)
+        else:
+            print('Unknown Authentication Method')
 
     def cmd(self, cmd):
         '''
         Run a single command and show output.
         '''
-        self._connect()
+        self._connect(auth_method='key')
         stdin, stdout, stderr = self.client.exec_command(cmd)
         for line in stdout.readlines():
             print(line.replace('\n', ''))
         for line in stderr.readlines():
             print(line.replace('\n', ''))
         self.client.close()
-    
+
+    def _read_key(self):
+        '''
+        '''
+        with open(f'{self.cred[1]}.pub', 'r') as key_file:
+            return key_file.readlines()[0]
+
+    def add_key(self):
+        '''
+        '''
+        key_content = self._read_key()
+        self._connect(auth_method='password')
+        stdin, stdout, stderr = self.client.exec_command('ls -l ~/.ssh')
+        if "No such file" in stderr.readlines()[0]:
+            self.client.exec_command('mkdir ~/.ssh')
+            print('SSH directory created')
+
+        cmd = f'echo {key_content} >> ~/.ssh/authorized_keys'
+        stdin, stdout, stderr = self.client.exec_command(cmd)
+        for line in stdout.readlines():
+            print(line.replace('\n', ''))
+        for line in stderr.readlines():
+            print(line.replace('\n', ''))
+        print('Key Added!')
+        self.client.close()
+
     def _interactive(self, chan):
         '''
         [ DEPRECARED ]
