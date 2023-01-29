@@ -54,16 +54,21 @@ class SSHConnect():
         else:
             print('Unknown Authentication Method')
 
+    def _show_output(self, stdout, stderr):
+        '''
+        '''
+        for line in stdout.readlines():
+            print(line.replace('\n', ''))
+        for line in stderr.readlines():
+            print(line.replace('\n', ''))
+
     def cmd(self, cmd):
         '''
         Run a single command and show output.
         '''
         self._connect(auth_method='key')
-        stdin, stdout, stderr = self.client.exec_command(cmd)
-        for line in stdout.readlines():
-            print(line.replace('\n', ''))
-        for line in stderr.readlines():
-            print(line.replace('\n', ''))
+        _, stdout, stderr = self.client.exec_command(cmd)
+        self._show_output(stdout, stderr)
         self.client.close()
 
     def _read_key(self):
@@ -72,24 +77,26 @@ class SSHConnect():
         with open(f'{self.cred[1]}.pub', 'r') as key_file:
             return key_file.readlines()[0]
 
+    def _create_ssh_directory(self):
+        '''
+        '''
+        _, _, stderr = self.client.exec_command('ls -l ~/.ssh')
+        if "No such file" in str(stderr.readlines()):
+            self.client.exec_command('mkdir ~/.ssh')
+            print('SSH directory created')
+
     def add_key(self):
         '''
         '''
         key_content = self._read_key()
         self._connect(auth_method='password')
-
-        stdin, stdout, stderr = self.client.exec_command('ls -l ~/.ssh')
-        if "No such file" in str(stderr.readlines()):
-            self.client.exec_command('mkdir ~/.ssh')
-            print('SSH directory created')
+        self._create_ssh_directory()
 
         cmd = f'echo "{key_content}" >> ~/.ssh/authorized_keys'
         stdin, stdout, stderr = self.client.exec_command(cmd)
-        for line in stdout.readlines():
-            print(line.replace('\n', ''))
-        for line in stderr.readlines():
-            print(line.replace('\n', ''))
-        print('Key Added!')
+        self._show_output(stdout, stderr)
+        if stderr.readlines() == []:
+            print('Key Added!')
         self.client.close()
 
     def _interactive(self, chan):
