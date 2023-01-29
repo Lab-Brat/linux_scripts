@@ -56,6 +56,8 @@ class SSHConnect():
 
     def _show_output(self, stdout, stderr):
         '''
+        Show full output of both stdout and stderr
+        of the command that was ran on the host.
         '''
         for line in stdout.readlines():
             print(line.replace('\n', ''))
@@ -64,7 +66,7 @@ class SSHConnect():
 
     def cmd(self, cmd):
         '''
-        Run a single command and show output.
+        Run a single command supplied by the user.
         '''
         self._connect(auth_method='key')
         _, stdout, stderr = self.client.exec_command(cmd)
@@ -73,12 +75,15 @@ class SSHConnect():
 
     def _read_key(self):
         '''
+        Read public key file from the environmental variable.
         '''
         with open(f'{self.cred[1]}.pub', 'r') as key_file:
             return key_file.readlines()[0]
 
     def _create_ssh_directory(self):
         '''
+        Create users' default SSH configuration repository 
+        if it doesn't exist.
         '''
         _, _, stderr = self.client.exec_command('ls -l ~/.ssh')
         if "No such file" in str(stderr.readlines()):
@@ -87,6 +92,7 @@ class SSHConnect():
 
     def add_key(self):
         '''
+        Add user's public SSH key to authorized_keys files.
         '''
         key_content = self._read_key()
         self._connect(auth_method='password')
