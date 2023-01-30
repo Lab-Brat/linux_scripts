@@ -1,11 +1,6 @@
 #!/usr/bin/python3
-import select
-import socket
 import sys
 import os
-import termios
-import tty
-from paramiko.py3compat import u
 from paramiko.client import SSHClient, AutoAddPolicy
 
 
@@ -104,52 +99,6 @@ class SSHConnect():
         if stderr.readlines() == []:
             print('Key Added!')
         self.client.close()
-
-    def _interactive(self, chan):
-        '''
-        [ DEPRECARED ]
-        Launch an interactive Terminal.
-        '''
-        oldtty = termios.tcgetattr(sys.stdin)
-        try:
-            tty.setraw(sys.stdin.fileno())
-            tty.setcbreak(sys.stdin.fileno())
-            chan.settimeout(0.0)
-
-            while True:
-                r, w, e = select.select([chan, sys.stdin], [], [])
-                if chan in r:
-                    try:
-                        x = u(chan.recv(1024))
-                        if len(x) == 0:
-                            sys.stdout.write("\r\n*** EOF\r\n")
-                            break
-                        sys.stdout.write(x)
-                        sys.stdout.flush()
-                    except socket.timeout:
-                        pass
-                if sys.stdin in r:
-                    x = sys.stdin.read(1)
-                    if len(x) == 0:
-                        break
-                    chan.send(x)
-        finally:
-            termios.tcsetattr(sys.stdin, termios.TCSADRAIN, oldtty)
-
-    def terminal(self):
-        '''
-        [ DEPRECARED ]
-        Connect with an interactive Terminal.
-        '''
-        self._connect()
-        try:
-            channel = self.client.get_transport().open_session()
-            channel.get_pty()
-            channel.invoke_shell()
-            self._interactive(channel)
-            self.client.close()
-        except Exception:
-            print("Failed")
 
 
 if __name__ == '__main__':
