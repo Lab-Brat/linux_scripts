@@ -40,8 +40,9 @@ def ipfind(ips):
 
 @adm.command()
 @click.option('-t', '--title', required=True)
-def separator(title):
-    create_boundary.get_boundary(title)
+@click.option('-n', '--length', type=int)
+def separator(title, length):
+    create_boundary.get_boundary(title, length)
 
 @adm.command()
 @click.option('-p', '--path', required=True, type=str)

@@ -2,12 +2,13 @@
 import sys
 
 # ------------------------------ Script Logic ------------------------------- #
-def get_boundary(title):
+def get_boundary(title, line_len):
     '''
     Print a line separator of length 79 (PEP8 recommendation) 
     with a title in the middle
     '''
-    line_len  = 79
+    if line_len is None:
+        line_len = 79
     title_len = len(title)
     is_even = (line_len + title_len) % 2 == 0
 
