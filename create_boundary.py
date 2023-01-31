@@ -1,7 +1,5 @@
-#!/usr/bin/python3
 import sys
 
-# ------------------------------ Script Logic ------------------------------- #
 def get_boundary(title, line_len):
     '''
     Print a line separator of length 79 (PEP8 recommendation) 
@@ -33,19 +31,17 @@ def get_dash_length(line_len, title_len):
     return (line_len - 6 - title_len) // 2
 
 
-# ------------------------------- Run Script -------------------------------- #
 if __name__ == '__main__':
     try:
         title = sys.argv[1]
     except IndexError:
         print('Please supply a title for the separator')
         sys.exit(1)
+    
+    try:
+        line_len = int(sys.argv[2])
+    except:
+        line_len = 79
+    
+    get_boundary(title, line_len)
 
-    get_boundary(title)
-
-
-# Run in the console:
-# >---> python create_boundary.py "Testing Script's Functionality"
-#
-# Result:
-# --------------------- Testing Script's Functionality ---------------------- #
