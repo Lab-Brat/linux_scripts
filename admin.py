@@ -66,6 +66,12 @@ def sysd(service, timer, filename, vars):
     systemd.create_config(filename, template, vars)
     systemd.reload()
 
+@adm.command()
+@click.option('-r', '--run', type=str)
+def bash(run):
+    full_path = os.path.dirname(__file__)
+    os.system(f"{full_path}/bash/{run}.sh")
+
 
 if __name__ == '__main__':
     adm()
