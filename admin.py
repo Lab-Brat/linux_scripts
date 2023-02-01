@@ -15,9 +15,11 @@ def adm(empty):
     pass
 
 @adm.command()
-def show():
-    files = [f for f in os.listdir('.') if f[-3::] in ['.py', '.sh']]
-    files.remove('admin.py')
+@click.option('-b', '--bash', is_flag=True)
+def show(bash):
+    tp = ('./bash', '.sh') if bash else ('.', '.py')
+    files = [f for f in os.listdir(tp[0]) 
+               if f[-3::]==tp[1] and f!='admin.py']
     click.echo('[Available Scripts]')
     for i, file in enumerate(files):
         click.echo(f'({i+1}) {file}')
@@ -63,7 +65,7 @@ def sysd(service, timer, filename, vars):
         template = 'timer.j2'
     systemd.create_config(filename, template, vars)
     systemd.reload()
-    
+
 
 if __name__ == '__main__':
     adm()
