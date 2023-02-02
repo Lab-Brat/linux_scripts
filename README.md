@@ -35,6 +35,15 @@ admin
 #### separator
 
 #### show
+Show available Python and Bash scripts.
+Examples:
+```
+# Show Python scripts
+admin show
+
+# Show Bash scripts
+admin show --bash
+```
 
 #### ssh
 Add SSH public key to a host's `authorized_keys` file. 
