@@ -33,6 +33,12 @@ admin
 #### sensfind
 
 #### separator
+Create a line separator for scripts. 
+Default value is 79, which is recommend line length for Python code.
+Examples:
+```
+admin 
+```
 
 #### show
 Show available Python and Bash scripts.
