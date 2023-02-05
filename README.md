@@ -37,7 +37,11 @@ Create a line separator for scripts.
 Default value is 79, which is recommend line length for Python code.
 Examples:
 ```
-admin 
+# Print a separator line titled 'florples', length = 79
+admin separator -t 'flroples'
+
+# Print a separator line titled 'florples', length = 20
+admin separator -t 'flroples' -n 20
 ```
 
 #### show
