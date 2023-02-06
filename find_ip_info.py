@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 import subprocess
 import requests
 import sys
@@ -48,10 +47,3 @@ if __name__ == '__main__':
             pretty_print(ip_info)
     except IndexError:
         print('Argument format: ip or ip1,ip2,ip3')
-
-
-# Run in terminal
-# ./find_ip_info.py 8.8.8.8
-# IP:       8.8.8.8
-# Provider: Google
-# Country:  United States of America
