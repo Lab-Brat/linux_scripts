@@ -29,6 +29,12 @@ admin
 
 ## Using
 #### ipfind
+Use locally installed `whois` command to find information about IP provider 
+and parse the output.
+Examples:
+```
+admin ipfind -i 8.8.8.8
+```
 
 #### sensfind
 
