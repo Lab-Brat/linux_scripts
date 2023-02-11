@@ -107,3 +107,11 @@ admin ssh -h 192.168.56.111 -c 'ls -l /'
 ```
 
 #### sysd
+Create a systemd service or timer. 
+Command creates a file in `/etc/systemd/system`, therefore requires sudo privileges.
+Examples:
+```
+# Create a test service and a test timer
+sudo admin sysd --service -f 'test.service' -v '{"desc": "Test service", "exec": "/home/labbrat/test.sh"}'
+sudo admin sysd --timer   -f 'test.timer'   -v '{"desc": "Test timer", "service": "test.service", "time_interval": "00:00:00"}'
+```
