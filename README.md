@@ -33,10 +33,21 @@ Use locally installed `whois` command to find information about IP provider
 and parse the output.
 Examples:
 ```
+# find IP provider info of address 8.8.8.8
 admin ipfind -i 8.8.8.8
 ```
 
 #### sensfind
+Do a recursive search on a specified directory to look for IP addresses 
+and passwords. 
+Might come in handy to check sensitive info in a git repository 
+before pushing it.
+Examples:
+```
+# Search for sensitive info in current directory
+admin sensfind -p ./
+```
+
 
 #### separator
 Create a line separator for scripts. 
