@@ -7,6 +7,9 @@ import find_sensinfo
 import ssh_connect
 import systemd
 
+full_path = os.path.dirname(__file__)
+shell_dir = f"{full_path}/bash"
+
 
 @click.group(invoke_without_command=False)
 @click.pass_context
@@ -39,7 +42,7 @@ def ssh(host, add_key, command):
 @adm.command()
 @click.option("-i", "--ip", required=True, type=str)
 def ipfind(ip):
-    os.system(f"bash/find_ip_info.sh {ip}")
+    os.system(f"{shell_dir}/find_ip_info.sh {ip}")
 
 
 @adm.command()
@@ -74,8 +77,7 @@ def sysd(service, timer, filename, vars):
 @adm.command()
 @click.option("-r", "--run", type=str)
 def bash(run):
-    full_path = os.path.dirname(__file__)
-    os.system(f"{full_path}/bash/{run}.sh")
+    os.system(f"{shell_dir}/{run}.sh")
 
 
 if __name__ == "__main__":
