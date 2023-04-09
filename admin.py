@@ -38,11 +38,9 @@ def ssh(host, add_key, command):
 
 
 @adm.command()
-@click.option("-i", "--ips", required=True, type=str)
-def ipfind(ips):
-    for ip in ips.split(","):
-        ip_info = find_ip_info.get_info_local(ip)
-        find_ip_info.pretty_print(ip_info)
+@click.option("-i", "--ip", required=True, type=str)
+def ipfind(ip):
+    os.system(f"bash/find_ip_info.sh {ip}")
 
 
 @adm.command()
