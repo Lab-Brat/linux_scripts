@@ -16,10 +16,12 @@ elif [[ -n $(echo $whois_output | grep -i hetzner ) ]] ;    then  owner="Hetzner
 elif [[ -n $(echo $whois_output | grep -i hivelocity ) ]] ; then  owner="Hivelocity"
 elif [[ -n $(echo $whois_output | grep -i digitalocean ) ]] ; then  owner="DigitalOcean"
 else
-	owner=$(echo "$whois_output" | grep -E -i "org-name|orgname" \
+	owner=$(echo "$whois_output" | grep -E -i "descr|org-name|orgname" \
 	                             | tail -n 1 \
-								 | awk '{print $2}')
+								 | awk '{$1=""; print $0}' \
+								 | sed 's/^[ \t]*//')
 fi
+
 country=$(echo "$whois_output" | grep -i "Country:" \
                                | tail -n 1 \
 							   | awk '{print $2}')
