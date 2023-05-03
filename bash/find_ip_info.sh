@@ -9,11 +9,11 @@ domain=$1
 whois_output=$(whois "$domain")
 
 # Extract relevant information using regular expressions
-if [[ -n $(echo $whois_output |   grep -i amazon ) ]] ; then  owner="AWS"
-elif [[ -n $(echo $whois_output | grep -i atman ) ]] ;  then  owner="Atman"
-elif [[ -n $(echo $whois_output | grep -i azure ) ]] ;  then  owner="Azure"
-elif [[ -n $(echo $whois_output | grep -i hetzner ) ]] ;    then  owner="Hetzner"
-elif [[ -n $(echo $whois_output | grep -i hivelocity ) ]] ; then  owner="Hivelocity"
+if   [[ -n $(echo $whois_output | grep -i amazon ) ]] ;  then  owner="AWS"
+elif [[ -n $(echo $whois_output | grep -i atman ) ]]  ;  then  owner="Atman"
+elif [[ -n $(echo $whois_output | grep -i azure ) ]]  ;  then  owner="Azure"
+elif [[ -n $(echo $whois_output | grep -i hetzner ) ]] ; then  owner="Hetzner"
+elif [[ -n $(echo $whois_output | grep -i hivelocity ) ]]   ; then  owner="Hivelocity"
 elif [[ -n $(echo $whois_output | grep -i digitalocean ) ]] ; then  owner="DigitalOcean"
 else
 	owner=$(echo "$whois_output" | grep -E -i "descr|org-name|orgname" \
