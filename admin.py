@@ -2,7 +2,6 @@
 import click
 import os
 import json
-import create_boundary
 import find_sensinfo
 import ssh_connect
 import systemd
@@ -49,7 +48,9 @@ def ipfind(ip):
 @click.option("-t", "--title", required=True)
 @click.option("-n", "--length", type=int)
 def separator(title, length):
-    create_boundary.get_boundary(title, length)
+    if not length:
+        length = ""
+    os.system(f"{shell_dir}/separator.sh {title} {length}")
 
 
 @adm.command()
