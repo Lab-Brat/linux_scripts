@@ -27,6 +27,10 @@ function find_info {
 
     echo "Found 'password' keywords:"
     grep -ri "password" "$path" $exclude_flags
+
+    echo "Found Passwords:"
+    password_regex="\b(?=\w*[a-z])(?=\w*[A-Z])(?=\w*\d)\w{6,}\b"
+    grep -rioP "$password_regex" "$path" $exclude_flags
 }
 
 if [[ $# -lt 1 ]]; then
