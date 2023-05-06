@@ -2,7 +2,6 @@
 import click
 import os
 import json
-import find_sensinfo
 import ssh_connect
 import systemd
 
@@ -57,7 +56,9 @@ def separator(title, length):
 @click.option("-p", "--path", required=True, type=str)
 @click.option("-e", "--exclude", required=False, type=str)
 def sensfind(path, exclude):
-    find_sensinfo.find_info(path, exclude)
+    if not exclude:
+        exclude = ""
+    os.system(f"{shell_dir}/find_sensitive_info.sh {path} {exclude}")
 
 
 @adm.command()
