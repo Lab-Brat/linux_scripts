@@ -43,7 +43,9 @@ then
     echo "export $var_name=$var_value" >> ~/.zshrc
 
     echo "Environment variable $var_name has been set to '$var_value' and added to ~/.zshrc."
-else
-    echo "Environment variable $var_name is already defined with value '${!var_name}'."
 fi
+
+
+echo ""
+echo "Nothing else to do :)"
 
