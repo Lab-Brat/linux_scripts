@@ -5,6 +5,7 @@ This repository is a collection of scripts, written to automate some daily linux
 ## Table of Contents
 - [Set Up](#set-up)
 - [Using](#using)
+   - [bash](#bash) 
    - [ipfind](#ipfind)
    - [sensfind](#sensfind)
    - [separator](#separator)
