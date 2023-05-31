@@ -77,6 +77,14 @@ def sysd(service, timer, filename, vars):
 
 
 @adm.command()
+@click.option("-z", "--zone", type=str)
+def fwdsource(zone):
+    if not zone:
+        zone = ""
+    os.system(f"{shell_dir}/get_fw_sources.sh {zone}")
+
+
+@adm.command()
 @click.option("-r", "--run", type=str)
 def bash(run):
     os.system(f"{shell_dir}/{run}.sh")
