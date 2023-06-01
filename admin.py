@@ -19,7 +19,9 @@ def adm(empty):
 @click.option("-b", "--bash", is_flag=True)
 def show(bash):
     tp = ("./bash", ".sh") if bash else (".", ".py")
-    files = [f for f in os.listdir(tp[0]) if f[-3::] == tp[1] and f != "admin.py"]
+    files = [
+        f for f in os.listdir(tp[0]) if f[-3::] == tp[1] and f != "admin.py"
+    ]
     click.echo("[Available Scripts]")
     for i, file in enumerate(files):
         click.echo(f"({i+1}) {file}")
