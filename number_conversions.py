@@ -20,6 +20,7 @@ class ConversionNum:
                 print("type should be one of these: bin oct dec hex")
                 exit(1)
 
+
     def to_binary(self):
         number = int(self.input_number["in_num"])
         binary = []
@@ -52,7 +53,7 @@ class ConversionNum:
             result += int(digit) * (base ** power)
             power -= 1
 
-        return result
+        return f"dec_{result}"
 
     def to_decimal(self):
         number = self.input_number["in_num"]
