@@ -16,7 +16,7 @@ class ConversionNum:
 
     def check_type(self, input_number: str) -> Dict:
         input_type, input_number = input_number.split("_")
-        
+
         match input_type:
             case "bin" | "oct" | "dec" | "hex":
                 return {
@@ -28,65 +28,58 @@ class ConversionNum:
                 print("type should be one of these: bin oct dec hex")
                 exit(1)
 
-    def _make_decimal(self):
-        number = self.input_number["in_num"]
-        nutype = self.input_number["in_type"]
-        result = self.to_decimal(number, nutype)
-        if result is not None:
-            return int(result.split("_")[1])
-
-    def to_binary(self):
+    def _get_decimal_number(self):
         if self.input_number["in_type"] != "dec":
-            number = self._make_decimal()
+            number = self.input_number["in_num"]
+            nutype = self.input_number["in_type"]
+            result = self.to_decimal(number, nutype)
+            if result is not None:
+                return int(result.split("_")[1])
         else:
-            number = int(self.input_number["in_num"])
+            return int(self.input_number["in_num"])
 
+    def to_binary(self) -> str:
+        number = self._get_decimal_number()
         return f"bin_{self._from_decimal(number, 2)}"
 
-    def to_octal(self):
-        if self.input_number["in_type"] != "dec":
-            number = self._make_decimal()
-        else:
-            number = int(self.input_number["in_num"])
-
+    def to_octal(self) -> str:
+        number = self._get_decimal_number()
         return f"oct_{self._from_decimal(number, 8)}"
 
-    def to_hexadecimal(self):
-        if self.input_number["in_type"] != "dec":
-            number = self._make_decimal()
-        else:
-            number = int(self.input_number["in_num"])
-
+    def to_hexadecimal(self) -> str:
+        number = self._get_decimal_number()
         return f"hex_{self._from_decimal(number, 16)}"
 
-    def _from_decimal(self, number, base):
+    def _from_decimal(self, number, base) -> str:
         binary = []
 
         while number != 0:
             digit = number % base
             if digit >= 10 and digit <= 15:
                 digit = [
-                    letter for letter, value in self.hex_dict.items() 
-                    if value == str(digit)][0]
+                    letter
+                    for letter, value in self.hex_dict.items()
+                    if value == str(digit)
+                ][0]
             binary.append(digit)
             number = number // base
 
-        return ''.join([str(io) for io in binary[::-1]])
+        return "".join([str(io) for io in binary[::-1]])
 
-    def _to_decimal(self, number, base):
+    def _to_decimal(self, number, base) -> str:
         power = len(number) - 1
         result = 0
 
         for digit in list(number):
             if digit in self.hex_dict.keys():
                 digit = self.hex_dict[digit]
-            result += int(digit) * (base ** power)
+            result += int(digit) * (base**power)
             power -= 1
 
         return f"dec_{result}"
 
     def to_decimal(self, number=None, nutype=None):
-        if number == None and nutype ==None:
+        if number == None and nutype == None:
             number = self.input_number["in_num"]
             nutype = self.input_number["in_type"]
 
