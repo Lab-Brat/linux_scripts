@@ -41,10 +41,15 @@ class ConversionNum:
         else:
             number = int(self.input_number["in_num"])
 
-        return self._from_decimal(number, 2)
+        return f"bin_{self._from_decimal(number, 2)}"
 
     def to_octal(self):
-        pass
+        if self.input_number["in_type"] != "dec":
+            number = self._make_decimal()
+        else:
+            number = int(self.input_number["in_num"])
+
+        return f"oct_{self._from_decimal(number, 8)}"
 
     def _from_decimal(self, number, base):
         binary = []
@@ -53,7 +58,7 @@ class ConversionNum:
             binary.append(number % base)
             number = number // base
 
-        return f"bin_{''.join([str(io) for io in binary[::-1]])}"
+        return ''.join([str(io) for io in binary[::-1]])
 
     def _to_decimal(self, number, base):
         power = len(number) - 1
@@ -88,6 +93,6 @@ class ConversionNum:
 
 if __name__ == "__main__":
     input_number = "dec_10"
-    input_number = "oct_16"
+    input_number = "bin_0101100"
     con = ConversionNum(input_number)
-    print(con.to_binary())
+    print(con.to_octal())
