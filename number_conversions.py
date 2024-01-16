@@ -6,11 +6,6 @@ class ConversionNum:
     def __init__(self, input_number) -> None:
         self.input_number = self.check_type(input_number)
 
-        # convert to decimal first
-        if self.input_number["in_type"] != "dec":
-            pass
-
-
     def check_type(self, input_number: str) -> Dict:
         input_type, input_number = input_number.split("_")
         
@@ -39,8 +34,38 @@ class ConversionNum:
     def to_octal(self):
         pass
 
+    def _to_decimal(self, number, base):
+        power = len(number) - 1
+        result = 0
+        hex_dict = {
+            "A": "10",
+            "B": "11",
+            "C": "12",
+            "D": "13",
+            "E": "14",
+            "F": "15",
+        }
+
+        for digit in list(number):
+            if digit in ["A", "B", "C", "D", "E", "F"]:
+                digit = hex_dict[digit]
+            result += int(digit) * (base ** power)
+            power -= 1
+
+        return result
+
     def to_decimal(self):
-        pass
+        number = self.input_number["in_num"]
+        nutype = self.input_number["in_type"]
+        match nutype:
+            case "bin":
+                return self._to_decimal(number, 2)
+            case "oct":
+                return self._to_decimal(number, 8)
+            case "dec":
+                return number
+            case "hex":
+                return self._to_decimal(number, 16)
 
     def to_hexadecimal(self):
         pass
@@ -48,5 +73,6 @@ class ConversionNum:
 
 if __name__ == "__main__":
     input_number = "dec_21"
+    input_number = "hex_F0"
     con = ConversionNum(input_number)
-    print(con.to_binary())
+    print(con.to_decimal())
