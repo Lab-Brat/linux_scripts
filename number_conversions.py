@@ -20,16 +20,26 @@ class ConversionNum:
                 print("type should be one of these: bin oct dec hex")
                 exit(1)
 
+    def _make_decimal(self):
+        number = self.input_number["in_num"]
+        nutype = self.input_number["in_type"]
+        result = self.to_decimal(number, nutype)
+        if result is not None:
+            return int(result.split("_")[1])
 
     def to_binary(self):
-        number = int(self.input_number["in_num"])
+        if self.input_number["in_type"] != "dec":
+            number = self._make_decimal()
+        else:
+            number = int(self.input_number["in_num"])
+        print(number)
         binary = []
 
         while number != 0:
             binary.append(number % 2)
             number = number // 2
 
-        return f"bin_{''.join([str(io) for io in binary])}"
+        return f"bin_{''.join([str(io) for io in binary[::-1]])}"
 
 
     def to_octal(self):
@@ -55,9 +65,11 @@ class ConversionNum:
 
         return f"dec_{result}"
 
-    def to_decimal(self):
-        number = self.input_number["in_num"]
-        nutype = self.input_number["in_type"]
+    def to_decimal(self, number=None, nutype=None):
+        if number == None and nutype ==None:
+            number = self.input_number["in_num"]
+            nutype = self.input_number["in_type"]
+
         match nutype:
             case "bin":
                 return self._to_decimal(number, 2)
@@ -73,7 +85,7 @@ class ConversionNum:
 
 
 if __name__ == "__main__":
-    input_number = "dec_21"
-    input_number = "hex_F0"
+    input_number = "dec_10"
+    input_number = "oct_16"
     con = ConversionNum(input_number)
-    print(con.to_decimal())
+    print(con.to_binary())
