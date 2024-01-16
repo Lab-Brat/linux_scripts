@@ -5,6 +5,14 @@ from typing import Dict
 class ConversionNum:
     def __init__(self, input_number) -> None:
         self.input_number = self.check_type(input_number)
+        self.hex_dict = {
+            "A": "10",
+            "B": "11",
+            "C": "12",
+            "D": "13",
+            "E": "14",
+            "F": "15",
+        }
 
     def check_type(self, input_number: str) -> Dict:
         input_type, input_number = input_number.split("_")
@@ -32,34 +40,28 @@ class ConversionNum:
             number = self._make_decimal()
         else:
             number = int(self.input_number["in_num"])
-        print(number)
-        binary = []
 
-        while number != 0:
-            binary.append(number % 2)
-            number = number // 2
-
-        return f"bin_{''.join([str(io) for io in binary[::-1]])}"
-
+        return self._from_decimal(number, 2)
 
     def to_octal(self):
         pass
 
+    def _from_decimal(self, number, base):
+        binary = []
+
+        while number != 0:
+            binary.append(number % base)
+            number = number // base
+
+        return f"bin_{''.join([str(io) for io in binary[::-1]])}"
+
     def _to_decimal(self, number, base):
         power = len(number) - 1
         result = 0
-        hex_dict = {
-            "A": "10",
-            "B": "11",
-            "C": "12",
-            "D": "13",
-            "E": "14",
-            "F": "15",
-        }
 
         for digit in list(number):
-            if digit in ["A", "B", "C", "D", "E", "F"]:
-                digit = hex_dict[digit]
+            if digit in self.hex_dict.keys():
+                digit = self.hex_dict[digit]
             result += int(digit) * (base ** power)
             power -= 1
 
