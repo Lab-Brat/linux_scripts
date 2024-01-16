@@ -51,11 +51,24 @@ class ConversionNum:
 
         return f"oct_{self._from_decimal(number, 8)}"
 
+    def to_hexadecimal(self):
+        if self.input_number["in_type"] != "dec":
+            number = self._make_decimal()
+        else:
+            number = int(self.input_number["in_num"])
+
+        return f"hex_{self._from_decimal(number, 16)}"
+
     def _from_decimal(self, number, base):
         binary = []
 
         while number != 0:
-            binary.append(number % base)
+            digit = number % base
+            if digit >= 10 and digit <= 15:
+                digit = [
+                    letter for letter, value in self.hex_dict.items() 
+                    if value == str(digit)][0]
+            binary.append(digit)
             number = number // base
 
         return ''.join([str(io) for io in binary[::-1]])
@@ -86,9 +99,6 @@ class ConversionNum:
                 return number
             case "hex":
                 return self._to_decimal(number, 16)
-
-    def to_hexadecimal(self):
-        pass
 
 
 if __name__ == "__main__":
