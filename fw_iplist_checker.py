@@ -14,10 +14,15 @@ class IPChecker:
         if ips == [] and networks == []:
             print("Did not find any valid IPs or networks, exiting")
             exit()
+        else:
+            print()
 
         # find duplicates
         self.find_duplicates(networks)
         self.find_duplicates(ips)
+
+        # find overlap in network ranges
+        self.find_subnet_overlaps(networks)
 
         print("All checks completed :)")
 
@@ -57,6 +62,22 @@ class IPChecker:
             print("duplicates found!")
             for dup in duplicates:
                 print(dup)
+            print()
+
+    def find_subnet_overlaps(self, subnets):
+        # get only the unique set of subnets
+        subnets = list(set(subnets))
+        # Convert subnets into ranges of IPs
+        ip_ranges = [ipaddress.IPv4Network(subnet) for subnet in subnets]
+
+        extra_space = False
+        for i in range(len(ip_ranges)):
+            for j in range(i + 1, len(ip_ranges)):
+                if ip_ranges[i].overlaps(ip_ranges[j]):
+                    print(f"Subnets {subnets[i]} and {subnets[j]} overlap.")
+                    extra_space = True
+
+        if extra_space:
             print()
 
 
