@@ -24,6 +24,9 @@ class IPChecker:
         # find overlap in network ranges
         self.find_subnet_overlaps(networks)
 
+        # find network and IP overlaps
+        self.find_overlaps(networks, ips)
+
         print("All checks completed :)")
 
     def read_file(self, filepath):
@@ -76,7 +79,18 @@ class IPChecker:
                 if ip_ranges[i].overlaps(ip_ranges[j]):
                     print(f"Subnets {subnets[i]} and {subnets[j]} overlap.")
                     extra_space = True
+        if extra_space:
+            print()
 
+    def find_overlaps(self, nets, ips):
+        extra_space = False
+        for net in nets:
+            net = ipaddress.ip_network(net)
+            for ip in ips:
+                ip = ipaddress.ip_address(ip)
+                if ip in net:
+                    print(f"Overlap Found: {net} covers {ip}")
+                    extra_space = True
         if extra_space:
             print()
 
