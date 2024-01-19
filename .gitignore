@@ -4,3 +4,4 @@ venv
 vagrant/*
 vagrant/!Vagrantfile
 
+inventory
