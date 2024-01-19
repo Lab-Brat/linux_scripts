@@ -1,14 +1,25 @@
 import re
 import ipaddress
+from collections import Counter
 
 
 class IPChecker:
     def __init__(self, filepath) -> None:
         iplist = self.read_file(filepath)
-        ips, networks, invalid = self.categorize_addresses(iplist)
-        print(len(ips), len(networks), len(invalid))
+        ips, networks, _ = self.categorize_addresses(iplist)
+        if ips:
+            print(f"found IP addresses: {len(ips)}")
+        if networks:
+            print(f"found Networks: {len(networks)}")
+        if ips == [] and networks == []:
+            print("Did not find any valid IPs or networks, exiting")
+            exit()
 
-        print("\nAll checks completed :)")
+        # find duplicates
+        self.find_duplicates(networks)
+        self.find_duplicates(ips)
+
+        print("All checks completed :)")
 
     def read_file(self, filepath):
         with open(filepath, "r") as file:
@@ -33,8 +44,20 @@ class IPChecker:
             print(f"invalid addresses found:")
             for address in invalid:
                 print(address)
+            print()
 
         return ips, networks, invalid
+
+    def find_duplicates(self, ipset):
+        counter = Counter(ipset)
+        duplicates = [
+            item for item, frequency in counter.items() if frequency > 1
+        ]
+        if duplicates:
+            print("duplicates found!")
+            for dup in duplicates:
+                print(dup)
+            print()
 
 
 if __name__ == "__main__":
