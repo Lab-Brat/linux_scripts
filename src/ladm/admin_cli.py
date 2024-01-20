@@ -2,8 +2,7 @@
 import click
 import os
 import json
-import ssh_connect
-import systemd
+from ladm import ssh_connect, systemd
 
 full_path = os.path.dirname(__file__)
 shell_dir = f"{full_path}/bash"
@@ -70,6 +69,7 @@ def sensfind(path, exclude):
 @click.option("-v", "--vars")
 def sysd(service, timer, filename, vars):
     vars = json.loads(vars)
+    template = None
     if service:
         template = "service.j2"
     elif timer:
