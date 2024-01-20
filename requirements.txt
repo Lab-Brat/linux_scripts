@@ -1,4 +1,0 @@
-click
-paramiko
-requests
-jinja2
