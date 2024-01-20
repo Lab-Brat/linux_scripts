@@ -1,7 +1,6 @@
 __pycache__
-admin.egg-info/
-venv
+build
+*/*egg-info/
+.venv
 vagrant/*
 vagrant/!Vagrantfile
-
-inventory
