@@ -58,9 +58,7 @@ class IPChecker:
 
     def find_duplicates(self, ipset):
         counter = Counter(ipset)
-        duplicates = [
-            item for item, frequency in counter.items() if frequency > 1
-        ]
+        duplicates = [item for item, frequency in counter.items() if frequency > 1]
         if duplicates:
             print("duplicates found!")
             for dup in duplicates:
