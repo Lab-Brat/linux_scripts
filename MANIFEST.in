@@ -1,1 +1,7 @@
-include src/ladm/bash/
+include src/ladm/bash/exitVim.sh
+include src/ladm/bash/find_sensitive_info.sh
+include src/ladm/bash/get_fw_sources.sh
+include src/ladm/bash/separator.sh
+include src/ladm/bash/find_ip_info.sh
+include src/ladm/bash/get-info.sh
+include src/ladm/bash/vm.sh
