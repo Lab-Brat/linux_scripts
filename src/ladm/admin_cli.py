@@ -5,8 +5,7 @@ import json
 from ladm import ssh_connect, systemd
 
 full_path = os.path.dirname(__file__)
-shell_dir = f"{full_path}/bash"
-
+shell_dir = f"{full_path}/src/ladm/bash"
 
 @click.group(invoke_without_command=False)
 @click.pass_context
