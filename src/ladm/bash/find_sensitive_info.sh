@@ -46,4 +46,3 @@ if [[ -z "$2" ]]; then
 fi
 
 find_info "$path" "$exclude_dir"
-

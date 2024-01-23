@@ -16,4 +16,3 @@ for source in $sources; do
         echo "- \"${source%/*}\""
     fi
 done
-
