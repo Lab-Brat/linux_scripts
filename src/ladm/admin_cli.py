@@ -15,15 +15,6 @@ def adm(empty):
 
 
 @adm.command()
-@click.option("-b", "--bash", is_flag=True)
-def show(bash):
-    files = [f for f in os.listdir(shell_dir)]
-    click.echo("[Bash Scripts]")
-    for i, file in enumerate(files):
-        click.echo(f"({i+1}) {file}")
-
-
-@adm.command()
 @click.option("-h", "--host", required=True, type=str)
 @click.option("-k", "--add-key", is_flag=True)
 @click.option("-c", "--command", type=str)
@@ -85,8 +76,24 @@ def fwdsource(zone):
 
 @adm.command()
 @click.option("-r", "--run", type=str)
-def bash(run):
-    os.system(f"{shell_dir}/{run}.sh")
+@click.option("-s", "--show", is_flag=True)
+def bash(run, show):
+    if show:
+        files = [f for f in os.listdir(shell_dir)]
+        click.echo("[Bash Scripts]")
+        for i, file in enumerate(files):
+            click.echo(f"({i+1}) {file}")
+    elif run:
+        run = run.split(" ")
+        cmd = run[0]
+        if len(run) == 1:
+            os.system(f"{shell_dir}/{cmd}")
+        else:
+            params = " ".join(run[1:])
+            os.system(f"{shell_dir}/{cmd} {params}")
+
+    else:
+        print("Please choose an action: --show or --run <script>")
 
 
 if __name__ == "__main__":
