@@ -1,4 +1,3 @@
-#!venv/bin/python
 import click
 import os
 import json
