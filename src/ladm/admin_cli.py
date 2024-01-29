@@ -1,7 +1,6 @@
 import click
 import os
 import json
-from ladm import ssh_connect, systemd
 
 full_path = os.path.dirname(__file__)
 shell_dir = f"{full_path}/bash"
@@ -14,15 +13,8 @@ def adm(empty):
 
 
 @adm.command()
-@click.option("-h", "--host", required=True, type=str)
-@click.option("-k", "--add-key", is_flag=True)
-@click.option("-c", "--command", type=str)
 def ssh(host, add_key, command):
-    sc = ssh_connect.SSHConnect(host)
-    if command:
-        sc.cmd(command)
-    elif add_key:
-        sc.add_key()
+    pass
 
 
 @adm.command()
