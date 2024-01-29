@@ -4,3 +4,4 @@ build
 .venv
 vagrant/*
 vagrant/!Vagrantfile
+*.yaml
