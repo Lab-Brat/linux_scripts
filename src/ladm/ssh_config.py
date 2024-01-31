@@ -15,12 +15,36 @@ class YAML_Config:
         with open(yaml_config, "r") as file:
             return yaml.safe_load(file)
 
-    def _yaml_write(self, output_yaml):
+    def _yaml_write(self, output_yaml=None):
+        output_yaml = output_yaml if output_yaml else f"{home_dir}/.ladm/ssh_conf.yaml"
+        print(output_yaml)
         with open(output_yaml, "w+") as file:
             yaml.dump(self.yaml_config, file)
 
     def yaml_show(self):
         pprint(self.yaml_config)
+
+    def _replace_setting(self, pair, setting, update):
+        pairings = self.yaml_config["pairings"]
+        pairings[pair][setting] = update
+        self._yaml_write()
+
+    def yaml_update(self, *args):
+        split = args[0].split()
+        pair = split[0]
+        setting = split[1]
+        action = split[2]
+        update = split[3]
+
+        match action:
+            case "x":
+                self._replace_setting(pair, setting, update)
+            case "+":
+                pass
+            case "-":
+                pass
+            case _:
+                pass
 
 
 class SSH_Config:
@@ -62,4 +86,5 @@ class SSH_Config:
 
 if __name__ == "__main__":
     yaml_conf = YAML_Config()
-    SSH_Config(yaml_conf).create_config()
+    yaml_conf.yaml_update("labbrat identity x labbrat")
+    # SSH_Config(yaml_conf).create_config()
