@@ -5,3 +5,4 @@ build
 vagrant/*
 vagrant/!Vagrantfile
 *.yaml
+config
