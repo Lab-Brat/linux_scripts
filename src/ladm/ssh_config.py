@@ -11,18 +11,20 @@ class SSH_Config:
         default_conf = f"{home_dir}/{config_dir}/ssh_conf.yaml"
 
         yaml_config = yaml_config if yaml_config else default_conf
-        self.config = self.read(yaml_config)
-        # pprint(self.config)
+        self.yaml_config = self._yaml_read(yaml_config)
         self.indent = "  "
         self.ssh_config = []
 
-    def read(self, yaml_config):
+    def _yaml_read(self, yaml_config):
         with open(yaml_config, "r") as file:
             return yaml.safe_load(file)
 
-    def write(self, output_yaml):
+    def _yaml_write(self, output_yaml):
         with open(output_yaml, "w+") as file:
-            yaml.dump(self.config, file)
+            yaml.dump(self.yaml_config, file)
+
+    def yaml_show(self):
+        pprint(self.yaml_config)
 
     def _create_general_settings(self, settings):
         self.ssh_config.append("Host *")
@@ -32,9 +34,9 @@ class SSH_Config:
 
     def _create_host_settings(self, pairings):
         for pair in pairings:
-            pair = self.config["pairings"][pair]
-            host = " ".join(self.config["hosts"][pair["host"]])
-            cred = self.config["identities"][pair["identity"]]
+            pair = self.yaml_config["pairings"][pair]
+            host = " ".join(self.yaml_config["hosts"][pair["host"]])
+            cred = self.yaml_config["identities"][pair["identity"]]
             opts = cred + pair["options"]
             self.ssh_config.append(f"Host {host}")
             for opt in opts:
@@ -47,8 +49,8 @@ class SSH_Config:
                 file.write(f"{line}\n")
 
     def create_config(self):
-        general_settings = self.config["general_settings"]
-        pairings = self.config["pairings"]
+        general_settings = self.yaml_config["general_settings"]
+        pairings = self.yaml_config["pairings"]
         self._create_general_settings(general_settings)
         self._create_host_settings(pairings)
         self._write_ssh_config("./")
