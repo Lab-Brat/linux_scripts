@@ -28,9 +28,18 @@ class SSH_Config:
         self.ssh_config.append("Host *")
         for setting in settings:
             self.ssh_config.append(f"{self.indent}{setting}")
+        self.ssh_config.append("")
 
-    def _create_host_settings(self):
-        pass
+    def _create_host_settings(self, pairings):
+        for pair in pairings:
+            pair = self.config["pairings"][pair]
+            host = " ".join(self.config["hosts"][pair["host"]])
+            cred = self.config["identities"][pair["identity"]]
+            opts = cred + pair["options"]
+            self.ssh_config.append(f"Host {host}")
+            for opt in opts:
+                self.ssh_config.append(f"{self.indent}{opt}")
+            self.ssh_config.append("")
 
     def _write_ssh_config(self, location=home_dir):
         with open(f"{location}/config", "w+") as file:
@@ -39,8 +48,11 @@ class SSH_Config:
 
     def create_config(self):
         general_settings = self.config["general_settings"]
+        pairings = self.config["pairings"]
         self._create_general_settings(general_settings)
+        self._create_host_settings(pairings)
         self._write_ssh_config("./")
+        pprint(self.ssh_config)
 
 
 if __name__ == "__main__":
