@@ -5,15 +5,11 @@ from pprint import pprint
 home_dir = os.getenv("HOME")
 
 
-class SSH_Config:
-    def __init__(self, yaml_config=None) -> None:
-        config_dir = ".ladm"
-        default_conf = f"{home_dir}/{config_dir}/ssh_conf.yaml"
-
-        yaml_config = yaml_config if yaml_config else default_conf
+class YAML_Config:
+    def __init__(self, input_conf=None) -> None:
+        default_conf = f"{home_dir}/.ladm/ssh_conf.yaml"
+        yaml_config = input_conf if input_conf else default_conf
         self.yaml_config = self._yaml_read(yaml_config)
-        self.indent = "  "
-        self.ssh_config = []
 
     def _yaml_read(self, yaml_config):
         with open(yaml_config, "r") as file:
@@ -25,6 +21,13 @@ class SSH_Config:
 
     def yaml_show(self):
         pprint(self.yaml_config)
+
+
+class SSH_Config:
+    def __init__(self, yaml_config: YAML_Config) -> None:
+        self.yaml_config = yaml_config.yaml_config
+        self.indent = "  "
+        self.ssh_config = []
 
     def _create_general_settings(self, settings):
         self.ssh_config.append("Host *")
@@ -58,5 +61,5 @@ class SSH_Config:
 
 
 if __name__ == "__main__":
-    output_conf = "./new_ssh_conf.yaml"
-    SSH_Config().create_config()
+    yaml_conf = YAML_Config()
+    SSH_Config(yaml_conf).create_config()
