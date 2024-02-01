@@ -61,7 +61,7 @@ class SSH_Config:
     def _create_host_settings(self, pairings):
         for pair in pairings:
             pair = self.yaml_config["pairings"][pair]
-            host = " ".join(self.yaml_config["hosts"][pair["host"]])
+            host = " ".join(pair["host"])
             cred = self.yaml_config["identities"][pair["identity"]]
             opts = cred + pair["options"]
             self.ssh_config.append(f"Host {host}")
