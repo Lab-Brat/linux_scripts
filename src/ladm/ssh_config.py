@@ -17,7 +17,6 @@ class YAML_Config:
 
     def _yaml_write(self, output_yaml=None):
         output_yaml = output_yaml if output_yaml else f"{home_dir}/.ladm/ssh_conf.yaml"
-        print(output_yaml)
         with open(output_yaml, "w+") as file:
             yaml.dump(self.yaml_config, file)
 
