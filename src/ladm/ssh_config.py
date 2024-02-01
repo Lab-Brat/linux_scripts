@@ -3,12 +3,13 @@ import yaml
 from pprint import pprint
 
 home_dir = os.getenv("HOME")
+default_dir = f"{home_dir}/.ladm"
 
 
 class YAML_Config:
     def __init__(self, input_conf=None) -> None:
-        default_conf = f"{home_dir}/.ladm/ssh_conf.yaml"
-        yaml_config = input_conf if input_conf else default_conf
+        self.default_conf = f"{default_dir}/ssh_conf.yaml"
+        yaml_config = input_conf if input_conf else self.default_conf
         self.yaml_config = self._yaml_read(yaml_config)
 
     def _yaml_read(self, yaml_config):
@@ -16,7 +17,7 @@ class YAML_Config:
             return yaml.safe_load(file)
 
     def _yaml_write(self, output_yaml=None):
-        output_yaml = output_yaml if output_yaml else f"{home_dir}/.ladm/ssh_conf.yaml"
+        output_yaml = output_yaml if output_yaml else self.default_conf
         with open(output_yaml, "w+") as file:
             yaml.dump(self.yaml_config, file)
 
