@@ -15,11 +15,20 @@ def adm(empty):
 
 @adm.command()
 @click.option("-s", "--show-yaml", is_flag=True)
-def ssh(show_yaml):
+@click.option("-u", "--update", type=str)
+def ssh(show_yaml, update):
     yaml_conf = YAML_Config()
+    # SSH_Config(yaml_conf).create_config()
 
     if show_yaml:
         yaml_conf.yaml_show()
+
+    if update:
+        if len(update.split()) != 4:
+            print("Input length !=4")
+            print("Format: <pair> <setting> <action> <update>")
+            exit()
+        yaml_conf.yaml_update(update)
 
 
 @adm.command()
