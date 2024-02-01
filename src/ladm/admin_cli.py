@@ -1,6 +1,7 @@
 import click
 import os
 import json
+from ladm.ssh_config import YAML_Config, SSH_Config
 
 full_path = os.path.dirname(__file__)
 shell_dir = f"{full_path}/bash"
@@ -13,8 +14,12 @@ def adm(empty):
 
 
 @adm.command()
-def ssh(host, add_key, command):
-    pass
+@click.option("-s", "--show-yaml", is_flag=True)
+def ssh(show_yaml):
+    yaml_conf = YAML_Config()
+
+    if show_yaml:
+        yaml_conf.yaml_show()
 
 
 @adm.command()
