@@ -74,16 +74,12 @@ class SSH_Config:
             for line in self.ssh_config:
                 file.write(f"{line}\n")
 
-    def create_config(self):
+    def create_config(self, alternative_path=None):
         general_settings = self.yaml_config["general_settings"]
         pairings = self.yaml_config["pairings"]
         self._create_general_settings(general_settings)
         self._create_host_settings(pairings)
-        self._write_ssh_config("./")
-        pprint(self.ssh_config)
-
-
-if __name__ == "__main__":
-    yaml_conf = YAML_Config()
-    yaml_conf.yaml_update("labbrat identity x labbrat")
-    # SSH_Config(yaml_conf).create_config()
+        ssh_config_path = (
+            f"{home_dir}/.ssh" if not alternative_path else alternative_path
+        )
+        self._write_ssh_config(ssh_config_path)

@@ -16,9 +16,9 @@ def adm(empty):
 @adm.command()
 @click.option("-s", "--show-yaml", is_flag=True)
 @click.option("-u", "--update", type=str)
-def ssh(show_yaml, update):
+@click.option("-a", "--apply", is_flag=True)
+def ssh(show_yaml, update, apply):
     yaml_conf = YAML_Config()
-    # SSH_Config(yaml_conf).create_config()
 
     if show_yaml:
         yaml_conf.yaml_show()
@@ -29,6 +29,9 @@ def ssh(show_yaml, update):
             print("Format: <pair> <setting> <action> <update>")
             exit()
         yaml_conf.yaml_update(update)
+
+    if apply:
+        SSH_Config(yaml_conf).create_config()
 
 
 @adm.command()
