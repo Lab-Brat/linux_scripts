@@ -1,6 +1,5 @@
 import click
 import os
-import json
 from ladm.ssh_config import YAML_Config, SSH_Config
 
 full_path = os.path.dirname(__file__)
@@ -13,7 +12,7 @@ def adm(empty):
     pass
 
 
-@adm.command()
+@adm.command(no_args_is_help=True)
 @click.option("-s", "--show-yaml", is_flag=True)
 @click.option("-u", "--update", type=str)
 @click.option("-a", "--apply", is_flag=True)
@@ -56,22 +55,6 @@ def sensfind(path, exclude):
     if not exclude:
         exclude = ""
     os.system(f"{shell_dir}/find_sensitive_info.sh {path} {exclude}")
-
-
-@adm.command()
-@click.option("-s", "--service", is_flag=True)
-@click.option("-t", "--timer", is_flag=True)
-@click.option("-f", "--filename", type=str)
-@click.option("-v", "--vars")
-def sysd(service, timer, filename, vars):
-    vars = json.loads(vars)
-    template = None
-    if service:
-        template = "service.j2"
-    elif timer:
-        template = "timer.j2"
-    systemd.create_config(filename, template, vars)
-    systemd.reload()
 
 
 @adm.command()
