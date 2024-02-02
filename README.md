@@ -9,33 +9,41 @@ This repository is a collection of scripts, written to automate some daily linux
    - [ipfind](#ipfind)
    - [sensfind](#sensfind)
    - [separator](#separator)
-   - [show](#show)
    - [ssh](#ssh)
-   - [sysd](#sysd)
 
 ## Set Up
 Clone the repository and navigate to it
 ```bash
 git clone https://github.com/Lab-Brat/linux_scripts.git
-cd linux_scripts
 ```  
 
 Then, install virtual enironment and build the app with setup.py
 ```bash
-virtualenv venv
-. venv/bin/activate
-pip install --editable .
-admin
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install .
+ladm --help
 ```
 
 ## Using
+#### bash
+Show available Bash scripts or run them.
+Examples:
+```
+# Show Bash scripts
+ladm bash show
+
+# Show Bash scripts
+ladm bash --run <script.sh>
+```
+
 #### ipfind
 Use locally installed `whois` command to find information about IP provider 
 and parse the output.
 Examples:
 ```
 # find IP provider info of address 8.8.8.8
-admin ipfind -i 8.8.8.8
+ladm ipfind -i 8.8.8.8
 ```
 
 #### sensfind
@@ -46,9 +54,8 @@ before pushing it.
 Examples:
 ```
 # Search for sensitive info in current directory
-admin sensfind -p ./
+ladm sensfind -p ./
 ```
-
 
 #### separator
 Create a line separator for scripts. 
@@ -56,63 +63,53 @@ Default value is 79, which is recommend line length for Python code.
 Examples:
 ```
 # Print a separator line titled 'florples', length = 79
-admin separator -t 'flroples'
+ladm separator -t 'flroples'
 
 # Print a separator line titled 'florples', length = 20
-admin separator -t 'flroples' -n 20
-```
-
-#### show
-Show available Python and Bash scripts.
-Examples:
-```
-# Show Python scripts
-admin show
-
-# Show Bash scripts
-admin show --bash
+ladm separator -t 'flroples' -n 20
 ```
 
 #### ssh
-Add SSH public key to a host's `authorized_keys` file. 
-Script relies on environmental variables. They can be difined in Linux envirnment file (.zshrc, for example):
+A tool that configures `~/.ssh/config` via a yaml file that support 
+editing it via CLI instead of doing it manually.  
+
+Configuration file is stored in `~/.ladm/ssh_conf.yaml`, and looks 
+something like this:
+```yaml
+general_settings:
+- ServerAliveInterval 120
+- IdentitiesOnly yes
+- StrictHostKeyChecking no
+identities:
+  personal:
+  - User labbrat
+  - IdentityFile /path/to/personal_key
+  root:
+  - User root
+  - IdentityFile /path/to/root_key
+pairings:
+  host1:
+    host:
+    - hostname-1.com
+    - hostname-2.com
+    identity: personal
+    options: []
+  host2:
+    host:
+    - hostname-3-*.com
+    identity: root
+    options:
+    - Port 69
 ```
-# Variables from admin.ssh
-export sc_name_1='vg'
-export sc_user_1='vagrant'
-export sc_key_1='/path/to/key'
-export sc_pas_1='vagrant'
 
-export sc_name_2=....
-....
-```
-4 variables are mandatory, but you can have as many variable sets as you please, as long as they are numbered appropriately. 
-To pick a set, define ADMIN_SSH_CRED and run the app.  
+And here are some example of how to use it:
+```bash
+# overwrite ~/.ssh/config with yaml configuraion
+ladm ssh -a
 
-Couple things to note:
-- Script uses key based authentication for the `-c` flag, and password authentication for `-k` flag
-- If a key is already added, `sc_pas_*` can be an empty string
-- Key itself is not created by the scrip, because it can easily be created by a one liner `ssh-keygen -P '' -q -f <path/to/key>`
+# update identity of a host and write ssh/config
+ladm ssh -u 'host2 identity x personal' -a
 
-
-**Examples**
-```
-# define credentials
-ADMIN_SSH_CRED=vg
-
-# add key to a host
-admin ssh -h 192.168.56.111 -k
-
-# run a single command on the host
-admin ssh -h 192.168.56.111 -c 'ls -l /'
-```
-
-#### sysd
-Create a systemd service or timer. 
-Command creates a file in `/etc/systemd/system`, therefore requires sudo privileges.
-Examples:
-```
-# Create a test service and a test timer
-sudo admin sysd --service -f 'test.service' -v '{"desc": "Test service", "exec": "/home/labbrat/test.sh"}'
-sudo admin sysd --timer   -f 'test.timer'   -v '{"desc": "Test timer", "service": "test.service", "time_interval": "00:00:00"}'
+# show yaml config
+ladm ssh -s
 ```
