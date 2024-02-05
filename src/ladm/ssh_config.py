@@ -55,9 +55,7 @@ class YAML_Config:
             print("Current options:")
             print(pairings[pair]["options"])
             exit()
-        print(pairings[pair]["options"])
         pairings[pair]["options"].remove(update)
-        print(pairings[pair]["options"])
         self._yaml_write()
 
     def yaml_update(self, *args):
