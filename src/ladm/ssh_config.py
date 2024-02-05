@@ -38,8 +38,30 @@ class YAML_Config:
         pairings[pair][setting] = update
         self._yaml_write()
 
+    def _add_option(self, pair, update):
+        pairings = self.yaml_config["pairings"]
+        if update in pairings[pair]["options"]:
+            print("Option already defined")
+            print("Current options:")
+            print(pairings[pair]["options"])
+            exit()
+        pairings[pair]["options"].append(update)
+        self._yaml_write()
+
+    def _remove_option(self, pair, update):
+        pairings = self.yaml_config["pairings"]
+        if update not in pairings[pair]["options"]:
+            print("Option not defined")
+            print("Current options:")
+            print(pairings[pair]["options"])
+            exit()
+        print(pairings[pair]["options"])
+        pairings[pair]["options"].remove(update)
+        print(pairings[pair]["options"])
+        self._yaml_write()
+
     def yaml_update(self, *args):
-        split = args[0].split()
+        split = args[0].split(" ", 3)
         pair = split[0]
         setting = split[1]
         action = split[2]
@@ -49,9 +71,9 @@ class YAML_Config:
             case "x":
                 self._replace_setting(pair, setting, update)
             case "+":
-                pass
+                self._add_option(pair, update)
             case "-":
-                pass
+                self._remove_option(pair, update)
             case _:
                 pass
 

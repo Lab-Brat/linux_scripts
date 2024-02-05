@@ -23,10 +23,6 @@ def ssh(show_yaml, update, apply):
         yaml_conf.yaml_show()
 
     if update:
-        if len(update.split()) != 4:
-            print("Input length !=4")
-            print("Format: <pair> <setting> <action> <update>")
-            exit()
         yaml_conf.yaml_update(update)
 
     if apply:
