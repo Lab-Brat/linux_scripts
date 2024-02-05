@@ -11,7 +11,7 @@ class YAML_Config:
         self.default_conf = f"{default_dir}/ssh_conf.yaml"
         yaml_config = input_conf if input_conf else self.default_conf
         self.yaml_config = self._yaml_read(yaml_config)
-        self.yaml_config = self._ensure_options(self.yaml_config)
+        self.yaml_config["pairings"] = self._ensure_options(self.yaml_config)
 
     def _yaml_read(self, yaml_config):
         with open(yaml_config, "r") as file:
@@ -26,7 +26,6 @@ class YAML_Config:
         pairings = yaml_config["pairings"]
         for pair in pairings:
             options = pairings[pair].get("options", [])
-            print(options)
             pairings[pair]["options"] = options
 
         return pairings
