@@ -39,9 +39,9 @@ class YAML_Config:
                 pprint(host_config)
             else:
                 print("Host configuration not found")
-                print("Existing configurations:", end = " ")
+                print("Existing configurations:", end=" ")
                 for key in self.yaml_config["pairings"]:
-                    print(key, end = " ")
+                    print(key, end=" ")
 
     def _replace_setting(self, pair, setting, update):
         pairings = self.yaml_config["pairings"]
