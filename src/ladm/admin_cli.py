@@ -13,14 +13,14 @@ def adm(empty):
 
 
 @adm.command(no_args_is_help=True)
-@click.option("-s", "--show-yaml", is_flag=True)
+@click.option("-s", "--show-yaml", default="all")
 @click.option("-u", "--update", type=str)
 @click.option("-a", "--apply", is_flag=True)
 def ssh(show_yaml, update, apply):
     yaml_conf = YAML_Config()
 
     if show_yaml:
-        yaml_conf.yaml_show()
+        yaml_conf.yaml_show(show_yaml)
 
     if update:
         yaml_conf.yaml_update(update)
