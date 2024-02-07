@@ -30,8 +30,18 @@ class YAML_Config:
 
         return pairings
 
-    def yaml_show(self):
-        pprint(self.yaml_config)
+    def yaml_show(self, host="all"):
+        if host == "all":
+            pprint(self.yaml_config)
+        else:
+            host_config = self.yaml_config["pairings"].get(host)
+            if host_config:
+                pprint(host_config)
+            else:
+                print("Host configuration not found")
+                print("Existing configurations:", end = " ")
+                for key in self.yaml_config["pairings"]:
+                    print(key, end = " ")
 
     def _replace_setting(self, pair, setting, update):
         pairings = self.yaml_config["pairings"]
