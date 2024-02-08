@@ -13,7 +13,7 @@ def adm(empty):
 
 
 @adm.command(no_args_is_help=True)
-@click.option("-s", "--show-yaml", default="all")
+@click.option("-s", "--show-yaml")
 @click.option("-u", "--update", type=str)
 @click.option("-a", "--apply", is_flag=True)
 def ssh(show_yaml, update, apply):
